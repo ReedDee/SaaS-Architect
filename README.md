@@ -6,7 +6,7 @@
 
 Describe your product idea. The system interviews you, makes decisions, and produces a complete implementation plan — with architecture, legal exposure, monetisation, security, DevOps, and a fully specified executor prompt — ready to build.
 
-→ **[See it in action](https://reedee.github.io/SaaS-Architect/infographic.html)**
+→ **[See it in action](https://reeddee.github.io/SaaS-Architect/)**
 
 ---
 
