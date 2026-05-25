@@ -430,8 +430,17 @@ A section agent has failed if any of these are true after it returns:
 - Output is empty or contains only an error message
 - The expected section doc (`docs/blueprint/<NN>-<slug>.md`) was not written
 - Output contains an unhandled exception or tool failure message
+- Output contains a network error, API timeout, or rate limit message (e.g. "overloaded", "529", "timeout", "rate limit exceeded")
 
-**On first failure — retry once:**
+**Network/API failure handling (detect before retry):**
+
+If the failure message indicates a transient infrastructure issue (rate limit, timeout, API overload):
+1. Wait 30 seconds before retrying — do not retry immediately
+2. On retry, add this prefix: "Previous attempt failed due to API/network issue. Retry now."
+3. If the second attempt also fails with a network error: wait 60 seconds, then retry a third time before surfacing to the founder
+4. Only surface to the founder after 3 consecutive network failures — these are transient and usually self-resolve
+
+**On first non-network failure — retry once:**
 
 Re-invoke the same section agent with identical inputs plus this prefix:
 > "Previous attempt failed or produced no output. Retry. Write output to `docs/blueprint/<NN>-<slug>.md`."

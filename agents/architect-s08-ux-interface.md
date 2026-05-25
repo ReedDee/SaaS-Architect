@@ -176,6 +176,21 @@ Before running the dependency check, memory search, or any research:
 
 These constraints are **mandatory inputs** — record them internally before proceeding. No design decision contradicts them.
 
+### S05/S06 Compliance Verification Gate (run before writing the doc)
+
+Before writing `08-ux-interface.md`, verify each constraint is reflected in your design decisions. Do not write until all pass:
+
+- [ ] Every public screen in the Screen Inventory uses SSR (matches S05 SSR pages list)
+- [ ] Animation level on public pages does not exceed S05 Core Web Vitals ceiling
+- [ ] Every screen URL slug matches S05 URL structure exactly
+- [ ] Colour palette verified against S06 contrast ratios (normal text AND large text)
+- [ ] Every interactive component has a focus state defined (S06)
+- [ ] Every named animation has a `prefers-reduced-motion` fallback (S06)
+- [ ] RTL strategy applied if S06 requires it (logical CSS properties used throughout)
+- [ ] i18n routing pattern matches S06 URL locale prefix format
+
+If any item fails: resolve it before writing. Log unresolved items as open issues in `00-issues.md` with severity CRITICAL.
+
 ### Explore before drafting
 1. Read `docs/blueprint/00-context.md`
 2. Read `docs/blueprint/01-problem-vision.md`, `02-user-roles.md`, `03-feature-map.md`

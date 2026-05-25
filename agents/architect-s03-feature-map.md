@@ -52,7 +52,15 @@ S02 was not run. Define roles here before writing the feature map — keep it fa
 
 1. **Who uses this product?** Based on S01, propose each user type in one line. Example: "Admin (manages the account), Member (uses the product), Guest (read-only access)." Ask the user to confirm or adjust.
 2. **Who pays?** Identify the billing role — which user type owns the subscription. State your assumption and confirm.
-3. **Permission boundary per role:** One sentence on what each role cannot do. This becomes the permission model S11 (Security & Compliance — threat model, auth, and data protection) and S10 (Data Architecture — schema, storage, and data model design) will reference.
+3. **Permission boundary per role:** For each role, define explicitly:
+   - What they **can** do (create, read, update, delete — per resource type)
+   - What they **cannot** do (hard boundary — e.g. "cannot access other tenants' data", "cannot modify billing")
+   - Whether they require authentication or can access public routes
+   - Whether they are tenant-scoped (multi-tenant) or global
+
+   This must be specific enough for S11 (Security & Compliance — threat model, auth, and data protection) to derive RLS policies and for S10 (Data Architecture — schema, storage, and data model design) to apply row-level security and tenant isolation. A one-sentence boundary is not sufficient — define per-resource CRUD permissions.
+
+4. **Multi-tenancy:** State explicitly whether the product is multi-tenant. If yes, define which role owns a tenant and how cross-tenant data isolation works.
 
 Record the agreed roles at the top of the S03 doc under `## Roles (defined here — S02 was skipped)` before writing the feature map. These roles propagate to all downstream sections in place of S02.
 
