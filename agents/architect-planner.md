@@ -228,17 +228,18 @@ Follow the writing-plans skill exactly:
 
 ### Phase D: Self-review (superpowers:writing-plans checklist)
 
-Run all four checks before saving:
+Run all five checks before saving:
 
 1. **Spec coverage:** for every item extracted in Phase B, confirm there is a task. List any gaps and add tasks.
-2. **Placeholder scan:** search for TBD, TODO, "implement later", "add validation", "handle edge cases". Fix every one.
-3. **Type consistency:** every function name, method, and property used in later tasks must match how it was defined in earlier tasks.
-4. **Architecture enforcement (mandatory — invoke `ecc:santa-method`):** two independent reviewers must both pass on:
+2. **Legal coverage:** for every MUST/SHOULD obligation identified in Phase B-Legal, confirm there is a corresponding task in implementation area 11. Cross-check the obligation map against the plan line by line. A legal flag with no task is a blocker — add the task before proceeding.
+3. **Placeholder scan:** search for TBD, TODO, "implement later", "add validation", "handle edge cases". Fix every one.
+4. **Type consistency:** every function name, method, and property used in later tasks must match how it was defined in earlier tasks.
+5. **Architecture enforcement (mandatory — invoke `ecc:santa-method`):** two independent reviewers must both pass on:
    - Every task that creates a file names the module it belongs to, matching the S09 (Technical Architecture — stack, module boundaries, and coupling rules) folder structure
    - Cross-module communication goes through the module's public interface (service layer, shared contract, or event) — never by importing internal files from another module
    - Every phase has a clear exit condition that can be verified without reading the next phase
 
-Fix all findings inline. Do not save until all four checks are clean.
+Fix all findings inline. Do not save until all five checks are clean.
 
 ### Phase E: Write master spec
 
