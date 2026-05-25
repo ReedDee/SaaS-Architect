@@ -82,6 +82,26 @@ Flag violations in the contradiction check (Step 3). Log them as issues in `00-i
 
 ---
 
+## Step -1 — Retrieve Pipeline State (run before everything else)
+
+Before reading any files or detecting mode, dispatch the Architect Tracker (`architect-tracker.md` — writes pipeline state and indexes section content for semantic retrieval) in **retrieve mode** as a subagent:
+
+```
+Invoke architect-tracker in retrieve mode. Project: <project name from current directory or 00-context.md if readable>. Return the RETRIEVED STATE block.
+```
+
+Use the returned state as follows:
+
+| Retrieved state | Action |
+|---|---|
+| `none — fresh start detected` | Proceed to mode detection normally — check for `00-context.md` as usual |
+| Last completed + sections list | Skip filesystem scan entirely — use memory state as ground truth for mode detection |
+| Memory older than 48h AND `00-state.md` exists | Cross-reference both; prefer the more recent |
+
+Pass the full `RETRIEVED STATE` block to the Brief Writer when dispatching, so each section brief includes prior pipeline decisions.
+
+---
+
 ## Step 0 — Change Detection
 
 Before reading section output, check whether the user's most recent message describes a change to something already decided in a prior section or in `00-context.md`.

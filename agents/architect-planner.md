@@ -160,7 +160,10 @@ If any of these lack a corresponding task in your plan, that is a gap.
 
 After extracting everything in Phase B, perform the legal synthesis before writing the plan:
 
-1. **Collect legal flags** — read all 13 section docs for any `## Legal Synthesis Note`, `## Advisory Notes` legal flags, or `Legal flags raised:` markers in section return blocks.
+1. **Collect legal flags** — use two methods in parallel:
+   - **Semantic search (primary):** call `mcp__plugin_claude-mem_mcp-search__smart_search` with query `"[<project>] legal advisory compliance obligation flag"`. Results surface legal flags from all indexed section docs without reading 13 files linearly.
+   - **Filesystem scan (gap-fill):** for any section doc NOT yet in the corpus (check `prime_corpus` index), read it directly and scan for `## Advisory Notes`, `## Legal Synthesis Note`, and `Legal flags raised:` markers.
+   - Merge both result sets. De-duplicate.
 
 2. **Invoke `legal-advisor` skill** — pass the collected flags and product context (markets, billing model, data handling decisions). Produce a consolidated obligation map.
 

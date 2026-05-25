@@ -48,9 +48,22 @@ Report the detected stage at the top of the impact analysis. Adjust Step 6 (plan
 
 ### 1. Analyse the change
 
-Read the change description carefully. Read all blueprint docs and `00-context.md`. Identify:
+**Step 1a — Semantic impact search (run first)**
+
+Before reading any files, call `mcp__plugin_claude-mem_mcp-search__smart_search` with a query derived from the change description. Examples:
+- Change is to auth model → query: `"[<project>] authentication session token permissions"`
+- Change is to pricing → query: `"[<project>] billing stripe pricing subscription"`
+- Change is to data model → query: `"[<project>] schema entity fields relationships"`
+
+Review the top results. These surface sections and decisions semantically linked to the change — often catching indirect dependencies that a structural read would miss.
+
+**Step 1b — Deep read**
+
+Read the change description carefully. Read all blueprint docs and `00-context.md`. Use the semantic search results from Step 1a to prioritise which sections to read most carefully.
+
+Identify:
 - Which sections are **directly affected** — their decisions or requirements must change
-- Which sections are **indirectly affected** — they depend on something that is changing
+- Which sections are **indirectly affected** — they depend on something that is changing (use Step 1a results to catch non-obvious indirect dependencies)
 - Whether the implementation plan (if it exists) has tasks that must be revised
 
 ### 2. Report impact before acting

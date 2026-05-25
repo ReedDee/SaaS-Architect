@@ -63,6 +63,24 @@ Use this for inputs that are genuinely unknowable from domain knowledge: price p
 
 **When your section requires multi-step advisory dialogue:** complete all advisory steps internally (research, council review, verification gate) before presenting output. Deliver a complete section doc, not a draft awaiting feedback. The founder reviews decisions at the Injector's confirmation gate — not mid-section.
 
+## 8. Memory Architecture
+
+This pipeline uses three memory layers. All three must be active — presence in requirements is not integration.
+
+| Layer | Tool | Purpose |
+|-------|------|---------|
+| **Retrieval** | `observation_add`, `get_observations`, `memory_context` | State persistence — pipeline survives session resets |
+| **Semantic** | `smart_search`, `query_corpus` | Meaning-based lookup — impact assessment, legal aggregation, cross-section constraints |
+| **Indexed content** | `memory_add`, `prime_corpus`, `build_corpus` | Full document search — section deliverables, plan, spec searchable by content |
+
+**Memory is the source of truth. Files are the cache.**
+
+- If `00-state.md` is missing or stale, the Tracker reconstructs from memory — not from user re-input
+- If a section doc is unreadable, its indexed content in the corpus is the fallback
+- Every agent that reads section content should prefer `smart_search` over re-reading all files when looking for specific decisions or flags
+
+**Project namespacing is mandatory.** All observations, memory entries, and corpus IDs must be prefixed `[<project>]` or use `architect-<project>` as corpus ID. Never write to or query a generic (un-namespaced) corpus.
+
 ## What This Pipeline Is Not
 
 - A consultant presenting options for the founder to choose between
