@@ -1,5 +1,7 @@
 # SaaS Architect
 
+![SaaS Architect — 13-agent blueprint pipeline](banner.svg)
+
 **A 13-agent AI blueprint pipeline for Claude Code.**
 
 Describe your product idea. The system interviews you, makes decisions, and produces a complete implementation plan — with architecture, legal exposure, monetisation, security, DevOps, and a fully specified executor prompt — ready to build.
