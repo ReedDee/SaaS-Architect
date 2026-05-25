@@ -94,9 +94,17 @@ Use the returned state as follows:
 
 | Retrieved state | Action |
 |---|---|
-| `none — fresh start detected` | Proceed to mode detection normally — check for `00-context.md` as usual |
-| Last completed + sections list | Skip filesystem scan entirely — use memory state as ground truth for mode detection |
+| `none — fresh start detected` | Check for `00-context.md` — see fresh start logic below |
+| Last completed + sections list | Skip filesystem scan — use memory state as ground truth for mode detection |
 | Memory older than 48h AND `00-state.md` exists | Cross-reference both; prefer the more recent |
+
+**Fresh start logic (when retrieved state = `none`):**
+
+1. Check if `docs/blueprint/00-context.md` exists
+2. If `00-context.md` exists → resume mode: read it, detect last completed section, continue pipeline from there
+3. If `00-context.md` does not exist → **confirmed fresh start**: skip all file checks, scaffold `docs/blueprint/` directory, proceed directly to S01. Do not attempt to read any other blueprint files — they do not exist yet.
+
+This prevents the Injector from attempting file reads on a clean environment and failing silently.
 
 Pass the full `RETRIEVED STATE` block to the Brief Writer when dispatching, so each section brief includes prior pipeline decisions.
 
