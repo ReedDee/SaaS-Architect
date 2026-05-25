@@ -1,0 +1,2436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Architect Agent — Blueprint to Build</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    /* Anthropic / Claude brand palette */
+    --bg:           #F0EAE0;
+    --bg2:          #E8E0D4;
+    --bg3:          #DDD4C8;
+    --bg4:          #CEC4B6;
+
+    /* Coral — Claude primary accent */
+    --amber:        #C8603A;
+    --amber-light:  #D4714A;
+    --amber-dim:    #9A4A30;
+    --amber-glow:   rgba(200,96,58,0.18);
+    --amber-glow2:  rgba(200,96,58,0.30);
+
+    /* Warm off-white */
+    --cream:        #1A1410;
+    --cream-dim:    #4A3F35;
+
+    /* Claude purple — secondary accent */
+    --violet:       #6B4FB8;
+    --violet-light: #7B5FC8;
+    --violet-dim:   #5A4090;
+    --violet-glow:  rgba(107,79,184,0.18);
+
+    /* Semantic */
+    --red:          #B04030;
+    --red-dim:      #903828;
+    --green:        #2E8A68;
+    --blue:         #3A70B0;
+
+    /* Neutrals */
+    --grey:         #8C8078;
+    --grey-light:   #6A6058;
+    --border:       #C8BCB0;
+    --border-light: #B8ACA0;
+
+    /* Band colours — Anthropic-toned */
+    --band-discovery:   #3A70B0;
+    --band-commercial:  #C8603A;
+    --band-quality:     #2E8A68;
+    --band-engineering: #6B4FB8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    width: 100%;
+    padding: 96px 40px 80px;
+    overflow: hidden;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(50,47,42,0.35) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .hero-grid-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 100%, var(--bg), transparent 70%),
+                radial-gradient(ellipse 60% 40% at 0% 50%, var(--bg), transparent 60%);
+  }
+
+  .hero-inner {
+    position: relative;
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: hero-rise 0.55s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
+  }
+
+  .hero-eyebrow-rule {
+    width: 28px;
+    height: 2px;
+    background: var(--amber);
+    flex-shrink: 0;
+  }
+
+  .hero-eyebrow-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+
+  .hero-headline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(2.8rem, 6.5vw, 7.2rem);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--cream);
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: hero-rise 0.65s cubic-bezier(0.16,1,0.3,1) 0.12s forwards;
+  }
+
+  .hero-headline em {
+    font-style: normal;
+    color: var(--amber);
+  }
+
+  .hero-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--grey-light);
+    max-width: 52ch;
+    margin-bottom: 52px;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: hero-rise 0.6s cubic-bezier(0.16,1,0.3,1) 0.22s forwards;
+  }
+
+  .hero-stats {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: hero-rise 0.55s cubic-bezier(0.16,1,0.3,1) 0.34s forwards;
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 0 28px 0 0;
+    margin-right: 28px;
+    border-right: 1px solid var(--border-light);
+  }
+
+  .hero-stat:last-child {
+    border-right: none;
+    margin-right: 0;
+    padding-right: 0;
+  }
+
+  .hero-stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--amber);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-stat-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 400;
+    color: var(--grey);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+
+  @keyframes hero-rise {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── LAYOUT ─── */
+  .infographic {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  /* ─── ZONE LABEL ─── */
+  .zone-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--grey);
+    padding: 8px 0;
+    margin-bottom: 24px;
+    margin-top: 56px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .zone-label::before {
+    content: '';
+    width: 20px; height: 1px;
+    background: var(--amber-dim);
+    flex-shrink: 0;
+  }
+  .zone-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border-light), transparent);
+  }
+  .zone-label span { color: var(--amber); font-weight: 700; }
+
+  /* ─── ENTRY PATHS ─── */
+  .entry-zone {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .entry-path {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-16px);
+    transition: all 0.45s ease;
+    cursor: pointer;
+  }
+  .entry-path.visible { opacity: 1; transform: translateY(0); }
+  .entry-path:hover { border-color: var(--amber-dim); background: var(--bg3); }
+  .entry-path .path-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--amber);
+    margin-bottom: 6px;
+  }
+  .entry-path .path-stats { font-size: 0.72rem; color: var(--grey-light); line-height: 1.65; }
+
+  /* ─── GATEWAY ─── */
+  .flow-arrow {
+    text-align: center;
+    color: var(--amber-dim);
+    font-size: 1rem;
+    padding: 6px 0;
+    animation: flow-pulse 2s ease-in-out infinite;
+  }
+  @keyframes flow-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+
+  .architect-gateway {
+    background: var(--bg2);
+    border: 1px solid var(--amber-dim);
+    border-radius: 12px;
+    padding: 22px 52px;
+    text-align: center;
+    margin: 0 auto 20px;
+    max-width: 360px;
+    position: relative;
+    overflow: hidden;
+    animation: gateway-pulse 3.5s ease-in-out infinite;
+  }
+  .architect-gateway::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--amber-glow), transparent);
+    pointer-events: none;
+  }
+  @keyframes gateway-pulse {
+    0%, 100% { box-shadow: 0 0 30px var(--amber-glow); border-color: var(--amber-dim); }
+    50% { box-shadow: 0 0 60px var(--amber-glow2); border-color: var(--amber); }
+  }
+  .architect-gateway .cmd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--amber-light);
+    letter-spacing: -0.02em;
+    position: relative;
+  }
+  .architect-gateway .subtitle {
+    font-size: 0.65rem;
+    color: var(--grey);
+    margin-top: 5px;
+    letter-spacing: 0.04em;
+    position: relative;
+  }
+
+  /* ─── SKILLS GATE ─── */
+  .skills-gate {
+    background: var(--bg2);
+    border: 1px dashed var(--violet-dim);
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-align: center;
+    margin: 0 auto 20px;
+    max-width: 480px;
+    font-size: 0.72rem;
+    color: var(--violet-light);
+    line-height: 1.6;
+  }
+  .skills-gate strong { color: var(--cream-dim); }
+
+  /* ─── MODE SELECTOR ─── */
+  .mode-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .mode-btn {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .mode-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, var(--amber-glow), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .mode-btn:hover::before, .mode-btn.active::before { opacity: 1; }
+  .mode-btn:hover, .mode-btn.active { border-color: var(--amber-dim); background: var(--bg3); }
+  .mode-btn.active { box-shadow: 0 0 20px var(--amber-glow); }
+  .mode-btn.active::after {
+    content: '✓ ACTIVE';
+    position: absolute;
+    top: 7px; right: 9px;
+    font-size: 0.5rem;
+    color: var(--amber);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .mode-btn .mode-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 6px;
+    position: relative;
+  }
+  .mode-btn .mode-detail { font-size: 0.68rem; color: var(--grey-light); line-height: 1.55; position: relative; }
+  .mode-btn .mode-cost { font-size: 0.65rem; color: var(--amber-dim); margin-top: 6px; font-family: 'JetBrains Mono', monospace; position: relative; }
+
+  /* ─── PAUSE GATE ─── */
+  .pause-gate {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 auto 28px;
+    max-width: 400px;
+    background: rgba(218,119,86,0.06);
+    border: 1px solid var(--amber-dim);
+    border-radius: 10px;
+    padding: 12px 22px;
+    animation: pause-pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pause-pulse {
+    0%, 100% { background: rgba(218,119,86,0.06); border-color: var(--amber-dim); }
+    50% { background: rgba(218,119,86,0.12); border-color: var(--amber); }
+  }
+  .pause-hexagon {
+    width: 30px; height: 30px;
+    background: var(--amber);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--bg);
+    flex-shrink: 0;
+  }
+  .pause-text { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--amber); }
+
+  /* ─── MAIN GRID ─── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 210px 1fr 268px;
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* ─── SUPPORT AGENTS ─── */
+  .support-rail { position: sticky; top: 20px; }
+  .support-agent {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: border-color 0.25s, background 0.25s, box-shadow 0.25s, opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  .support-agent.visible { opacity: 1; transform: translateX(0); }
+  .support-agent:hover { border-color: var(--violet-dim); background: var(--bg3); }
+  .support-agent.highlight { border-color: var(--violet); box-shadow: 0 0 20px var(--violet-glow); background: var(--bg3); }
+  .agent-header { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .agent-icon {
+    width: 26px; height: 26px;
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.82rem;
+    flex-shrink: 0;
+  }
+  .agent-icon.injector { background: rgba(218,119,86,0.18); }
+  .agent-icon.brief    { background: rgba(155,127,212,0.18); }
+  .agent-icon.tracker  { background: rgba(91,166,138,0.18); }
+  .agent-icon.change   { background: rgba(200,107,90,0.18); }
+  .agent-icon.principles { background: rgba(91,143,200,0.18); }
+  .agent-name { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 600; color: var(--cream); }
+  .agent-role { font-size: 0.63rem; color: var(--grey-light); line-height: 1.5; }
+  .agent-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 7px; }
+  .agent-tag {
+    font-size: 0.57rem;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: var(--bg3);
+    color: var(--grey-light);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ─── PIPELINE ─── */
+  .pipeline { position: relative; }
+
+  .founder-voice-banner {
+    background: rgba(218,119,86,0.05);
+    border: 1px dashed rgba(218,119,86,0.30);
+    border-radius: 8px;
+    padding: 9px 14px;
+    margin-bottom: 10px;
+    font-size: 0.70rem;
+    color: var(--amber);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .founder-voice-banner strong { color: var(--amber-light); }
+
+  /* ─── BAND ─── */
+  .band {
+    margin-bottom: 5px;
+    border-radius: 9px;
+    overflow: visible;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s;
+  }
+  .band:hover { border-color: var(--border-light); }
+  .band-header {
+    padding: 9px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: filter 0.2s;
+  }
+  .band-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .band-header:hover::before { opacity: 1; }
+  .band.discovery .band-header   { background: #111418; border-bottom: 1px solid #1E2530; }
+  .band.discovery .band-header::before { background: #151922; }
+  .band.commercial .band-header  { background: #18130E;  border-bottom: 1px solid #302014; }
+  .band.commercial .band-header::before { background: #221912; }
+  .band.quality .band-header     { background: #0E1815; border-bottom: 1px solid #182B25; }
+  .band.quality .band-header::before { background: #121E1A; }
+  .band.engineering .band-header { background: #131018; border-bottom: 1px solid #261F30; }
+  .band.engineering .band-header::before { background: #19151F; }
+  .band-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .band.discovery .band-dot   { background: var(--band-discovery);   box-shadow: 0 0 7px var(--band-discovery); }
+  .band.commercial .band-dot  { background: var(--band-commercial);  box-shadow: 0 0 7px var(--band-commercial); }
+  .band.quality .band-dot     { background: var(--band-quality);     box-shadow: 0 0 7px var(--band-quality); }
+  .band.engineering .band-dot { background: var(--band-engineering); box-shadow: 0 0 7px var(--band-engineering); }
+  .band-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.70rem;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    position: relative;
+  }
+  .band.discovery .band-name   { color: var(--band-discovery); }
+  .band.commercial .band-name  { color: var(--band-commercial); }
+  .band.quality .band-name     { color: var(--band-quality); }
+  .band.engineering .band-name { color: var(--band-engineering); }
+  .band-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--grey);
+    background: var(--bg3);
+    padding: 1px 6px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .band-toggle { margin-left: auto; font-size: 0.62rem; color: var(--grey); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; }
+  .band.collapsed .band-toggle { transform: rotate(-90deg); }
+  .band-sections { transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; overflow: hidden; max-height: 9999px; }
+
+  /* ─── SECTION CARD ─── */
+  .section-card {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 11px 14px 11px 13px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 10px;
+    align-items: start;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    opacity: 0;
+    transform: translateX(-6px);
+    position: relative;
+  }
+  .section-card.visible {
+    opacity: 1; transform: translateX(0);
+    transition: background 0.2s, box-shadow 0.2s, opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+  .section-card:hover { background: var(--bg3); }
+  .section-card:last-child { border-bottom: none; }
+  .section-card.dimmed { opacity: 0.14 !important; filter: saturate(0.25); }
+  .section-card.highlighted { background: var(--bg3); }
+  .band.discovery .section-card:hover,
+  .band.discovery .section-card.highlighted { box-shadow: inset 2px 0 0 var(--band-discovery); }
+  .band.commercial .section-card:hover,
+  .band.commercial .section-card.highlighted { box-shadow: inset 2px 0 0 var(--band-commercial); }
+  .band.quality .section-card:hover,
+  .band.quality .section-card.highlighted { box-shadow: inset 2px 0 0 var(--band-quality); }
+  .band.engineering .section-card:hover,
+  .band.engineering .section-card.highlighted { box-shadow: inset 2px 0 0 var(--band-engineering); }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: var(--grey);
+    padding-top: 3px;
+    min-width: 24px;
+    letter-spacing: 0.04em;
+  }
+  .section-info { flex: 1; min-width: 0; }
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.77rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-size: 0.5rem;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+  .badge.required    { background: rgba(154,79,64,0.14); color: var(--red);   border: 1px solid rgba(154,79,64,0.32); }
+  .badge.recommended { background: rgba(218,119,86,0.12); color: var(--amber); border: 1px solid rgba(218,119,86,0.28); }
+  .section-artifact { font-size: 0.68rem; color: var(--grey-light); line-height: 1.6; }
+  .section-artifact strong { color: var(--cream-dim); font-weight: 500; }
+  .section-gap {
+    font-size: 0.65rem;
+    color: var(--red-dim);
+    margin-top: 5px;
+    display: none;
+    line-height: 1.5;
+    padding: 5px 8px;
+    background: rgba(154,79,64,0.07);
+    border-radius: 3px;
+  }
+  .section-card.expanded .section-gap { display: block; }
+
+  .section-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+  .legal-flag {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.57rem;
+    color: var(--red);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    background: rgba(200,107,90,0.09);
+    border: 1px solid rgba(200,107,90,0.22);
+    border-radius: 3px;
+    padding: 2px 5px;
+    cursor: help;
+    position: relative;
+    z-index: 10;
+  }
+  .legal-tooltip {
+    display: none;
+    position: fixed;
+    background: var(--bg4);
+    border: 1px solid var(--red);
+    border-radius: 6px;
+    padding: 9px;
+    width: 220px;
+    z-index: 99999;
+    font-size: 0.62rem;
+    color: var(--cream);
+    line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    pointer-events: none;
+  }
+  .legal-tooltip li { margin-left: 10px; color: var(--grey-light); }
+
+  /* ─── SECTION LOOP ─── */
+  .section-loop {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 14px 5px 50px;
+    background: rgba(13,12,11,0.5);
+    font-size: 0.60rem;
+    color: var(--grey);
+    font-family: 'JetBrains Mono', monospace;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .loop-node {
+    background: var(--bg3);
+    border: 1px solid var(--border-light);
+    border-radius: 3px;
+    padding: 2px 6px;
+    color: var(--grey-light);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .loop-arrow { color: var(--border-light); font-size: 0.68rem; flex-shrink: 0; }
+  .loop-save { margin-left: auto; font-size: 0.62rem; color: var(--grey); display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
+
+  /* ─── RIGHT PANEL ─── */
+  .panel-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+    opacity: 0;
+    transform: translateX(18px);
+    transition: border-color 0.25s, opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+  .panel-card.visible { opacity: 1; transform: translateX(0); }
+  .panel-card:hover { border-color: var(--border-light); }
+  .panel-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.60rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--amber-dim);
+    margin-bottom: 12px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .recovery-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin-bottom: 7px;
+    font-size: 0.70rem;
+    color: var(--grey-light);
+    line-height: 1.5;
+  }
+  .recovery-step .step-num {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 1px solid var(--border-light);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    font-weight: 700;
+    color: var(--amber);
+    flex-shrink: 0;
+  }
+  .recovery-step strong { color: var(--cream); display: block; }
+
+  .legend-item { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; font-size: 0.70rem; color: var(--grey-light); }
+  .legend-swatch { width: 22px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+  .legend-line { width: 22px; height: 2px; flex-shrink: 0; }
+
+  /* ─── PLANNER PHASES ─── */
+  .planner-zone { margin-top: 36px; }
+  .planner-preflight {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .preflight-check {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .preflight-check:hover { border-color: var(--amber-dim); }
+  .preflight-check.blocked { border-color: var(--red); }
+  .preflight-check .check-icon { font-size: 1.1rem; margin-bottom: 5px; }
+  .preflight-check .check-name { font-family: 'JetBrains Mono', monospace; font-size: 0.70rem; font-weight: 600; color: var(--cream); margin-bottom: 3px; }
+  .preflight-check .check-desc { color: var(--grey-light); font-size: 0.65rem; line-height: 1.4; }
+  .preflight-check .check-blocked { color: var(--red); font-size: 0.62rem; margin-top: 3px; font-weight: 600; }
+  .preflight-arrow { font-size: 1.1rem; color: var(--grey); text-align: center; }
+
+  .planner-phases {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 4px;
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .planner-phases::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-light), var(--amber-dim), var(--border-light), transparent);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .phase-node {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 10px 5px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    opacity: 0;
+    transform: translateY(8px);
+    z-index: 1;
+  }
+  .phase-node.visible { opacity: 1; transform: translateY(0); }
+  .phase-node:hover { border-color: var(--violet-dim); background: var(--bg3); box-shadow: 0 0 14px var(--violet-glow); }
+  .phase-node.phase-h {
+    border-color: var(--amber-dim);
+    background: rgba(218,119,86,0.07);
+    animation: phase-h-pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes phase-h-pulse {
+    0%, 100% { box-shadow: 0 0 10px var(--amber-glow); border-color: var(--amber-dim); }
+    50% { box-shadow: 0 0 26px var(--amber-glow2); border-color: var(--amber); }
+  }
+  .phase-letter { font-family: 'JetBrains Mono', monospace; font-size: 0.86rem; font-weight: 700; color: var(--amber); margin-bottom: 4px; }
+  .phase-node.phase-h .phase-letter { color: var(--amber-light); }
+  .phase-name { font-size: 0.54rem; color: var(--grey); line-height: 1.3; }
+  .phase-node:hover .phase-name { color: var(--grey-light); }
+  .phase-node .phase-tooltip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg4);
+    border: 1px solid var(--violet-dim);
+    border-radius: 7px;
+    padding: 9px 11px;
+    width: 170px;
+    z-index: 100;
+    font-size: 0.63rem;
+    color: var(--cream-dim);
+    line-height: 1.6;
+    text-align: left;
+    white-space: normal;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .phase-node:hover .phase-tooltip { display: block; }
+  .checkpoint-icon { position: absolute; bottom: 4px; right: 4px; font-size: 0.48rem; color: var(--green); opacity: 0.7; }
+
+  /* ─── ZONE 5: OUTPUTS ─── */
+  .outputs-zone { margin-top: 28px; }
+
+  .artifacts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 0;
+  }
+
+  .output-artifact {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    opacity: 0;
+    transform: translateY(18px);
+    position: relative;
+    overflow: hidden;
+  }
+  .output-artifact::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--amber-dim), var(--amber), var(--amber-dim));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .output-artifact:hover::before { opacity: 1; }
+  .output-artifact.visible { opacity: 1; transform: translateY(0); }
+  .output-artifact:hover { border-color: var(--amber-dim); background: var(--bg3); box-shadow: 0 4px 18px rgba(0,0,0,0.28); }
+  .artifact-filename { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; font-weight: 700; color: var(--amber); margin-bottom: 7px; }
+  .artifact-desc { font-size: 0.68rem; color: var(--grey-light); line-height: 1.6; margin-bottom: 7px; }
+  .artifact-detail {
+    display: none;
+    font-size: 0.65rem;
+    color: var(--grey-light);
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+    padding-top: 9px;
+    margin-top: 5px;
+  }
+  .artifact-detail li { margin-left: 12px; color: var(--grey); }
+  .output-artifact.expanded .artifact-detail { display: block; }
+
+  /* ─── DEPENDENCY ARROWS ─── */
+  .dep-arrows {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-top: 0;
+  }
+  .dep-arrow-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2px;
+  }
+  .dep-arrow-label {
+    font-size: 0.57rem;
+    color: var(--grey);
+    font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+    margin-top: 2px;
+  }
+
+  /* ─── EXECUTOR NODE ─── */
+  .executor-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+  }
+
+  .executor-node {
+    background: var(--bg2);
+    border: 1px solid var(--violet-dim);
+    border-radius: 14px;
+    padding: 22px 24px;
+    animation: executor-glow 3.5s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+    max-width: 720px;
+    width: 100%;
+  }
+  .executor-node::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 40% at 50% 0%, var(--violet-glow), transparent);
+    pointer-events: none;
+  }
+  @keyframes executor-glow {
+    0%, 100% { box-shadow: 0 0 22px var(--violet-glow); border-color: var(--violet-dim); }
+    50% { box-shadow: 0 0 44px rgba(155,127,212,0.26); border-color: var(--violet); }
+  }
+
+  .executor-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .exec-rocket {
+    font-size: 2.2rem;
+    line-height: 1;
+    position: relative;
+    animation: rocket-bob 3s ease-in-out infinite;
+  }
+  @keyframes rocket-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  .exec-title-block { flex: 1; }
+  .exec-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--violet-light);
+    letter-spacing: -0.02em;
+    position: relative;
+    text-shadow: 0 0 40px rgba(155,127,212,0.40);
+  }
+  .exec-subtitle { font-size: 0.68rem; color: var(--grey-light); margin-top: 3px; line-height: 1.5; }
+
+  .exec-capabilities {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    border-top: 1px solid rgba(155,127,212,0.25);
+    padding-top: 14px;
+    position: relative;
+  }
+  .exec-cap {
+    background: rgba(155,127,212,0.06);
+    border: 1px solid rgba(155,127,212,0.16);
+    border-radius: 7px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .exec-cap-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .exec-cap-icon { font-size: 0.9rem; }
+  .exec-cap-name { font-family: 'JetBrains Mono', monospace; font-size: 0.70rem; font-weight: 700; color: var(--violet-light); }
+  .exec-cap-desc { font-size: 0.62rem; color: var(--grey-light); line-height: 1.5; }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ─── TOOLTIP ─── */
+  [data-tip] { position: relative; cursor: help; }
+  [data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: 100%; left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 5px;
+    background: var(--bg4);
+    border: 1px solid var(--border-light);
+    border-radius: 5px;
+    padding: 5px 9px;
+    font-size: 0.62rem;
+    color: var(--cream);
+    white-space: nowrap;
+    z-index: 200;
+    pointer-events: none;
+  }
+
+  /* ─── HERO TWO-COLUMN ─── */
+  .hero-two-col {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero-left { }
+  .hero-right {
+    opacity: 0;
+    transform: translateX(24px);
+    animation: hero-rise 0.7s cubic-bezier(0.16,1,0.3,1) 0.4s forwards;
+  }
+
+  /* ─── PIPELINE MINI-DIAGRAM ─── */
+  .hero-pipeline {
+    background: #141311;
+    border: 1px solid #352F2A;
+    border-radius: 14px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-pipeline::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(218,119,86,0.07), transparent);
+    pointer-events: none;
+  }
+  .hp-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #5C5650;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .hp-entry {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .hp-cmd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #DA7756;
+    background: rgba(218,119,86,0.10);
+    border: 1px solid rgba(218,119,86,0.28);
+    border-radius: 6px;
+    padding: 5px 18px;
+    letter-spacing: -0.01em;
+    animation: gateway-pulse 3.5s ease-in-out infinite;
+  }
+  .hp-arrow {
+    font-size: 0.8rem;
+    color: #5C5650;
+    text-align: center;
+    padding: 3px 0;
+    animation: flow-pulse 2s ease-in-out infinite;
+  }
+  .hp-bands {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    margin-bottom: 0;
+  }
+  .hp-flow-line {
+    width: 1px;
+    height: 8px;
+    background: linear-gradient(180deg, #352F2A, transparent);
+    align-self: center;
+    margin: 0 auto;
+  }
+  .hp-band {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .hp-band:hover { border-color: rgba(255,255,255,0.08); }
+  .hp-band-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .hp-discovery { background: rgba(91,143,200,0.06); }
+  .hp-discovery .hp-band-dot { background: #5B8FC8; box-shadow: 0 0 6px #5B8FC8; }
+  .hp-discovery .hp-band-label { color: #5B8FC8; }
+  .hp-commercial { background: rgba(218,119,86,0.06); }
+  .hp-commercial .hp-band-dot { background: #DA7756; box-shadow: 0 0 6px #DA7756; }
+  .hp-commercial .hp-band-label { color: #DA7756; }
+  .hp-quality { background: rgba(91,166,138,0.06); }
+  .hp-quality .hp-band-dot { background: #5BA68A; box-shadow: 0 0 6px #5BA68A; }
+  .hp-quality .hp-band-label { color: #5BA68A; }
+  .hp-engineering { background: rgba(155,127,212,0.06); }
+  .hp-engineering .hp-band-dot { background: #9B7FD4; box-shadow: 0 0 6px #9B7FD4; }
+  .hp-engineering .hp-band-label { color: #9B7FD4; }
+  .hp-band-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    flex: 1;
+  }
+  .hp-band-secs {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: #5C5650;
+    letter-spacing: 0.04em;
+  }
+  .hp-planner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3px;
+    padding: 6px 0 2px;
+  }
+  .hp-planner-icon { font-size: 0.85rem; }
+  .hp-planner-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.60rem;
+    color: #8C857C;
+    letter-spacing: 0.06em;
+  }
+  .hp-outputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px;
+    margin-bottom: 3px;
+  }
+  .hp-output {
+    background: #1C1A18;
+    border: 1px solid #352F2A;
+    border-radius: 5px;
+    padding: 5px 4px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: #8C857C;
+  }
+  .hp-out-spec {
+    border-color: rgba(155,127,212,0.30);
+    color: #B9A3E3;
+  }
+  .hp-executor {
+    background: rgba(155,127,212,0.08);
+    border: 1px solid rgba(155,127,212,0.28);
+    border-radius: 8px;
+    padding: 8px 16px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #B9A3E3;
+    margin-top: 2px;
+    animation: executor-glow 3.5s ease-in-out infinite;
+  }
+
+  /* ─── TIGHTER ZONE SPACING ─── */
+  .zone-label { margin-top: 36px; margin-bottom: 16px; }
+  .infographic { padding: 0 40px 60px; }
+
+  /* ─── TIGHTER ENTRY ZONE ─── */
+  .entry-zone { gap: 8px; margin-bottom: 12px; }
+  .entry-path { padding: 10px 14px; }
+  .flow-arrow { padding: 2px 0; font-size: 0.85rem; }
+
+  /* ─── SECTION CARDS — more readable ─── */
+  .section-title {
+    font-size: 0.80rem;
+  }
+  .section-artifact {
+    font-size: 0.70rem;
+  }
+  .band { margin-bottom: 4px; }
+  .band-header { padding: 8px 12px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .hero-two-col { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+  }
+
+  /* ─── TABLET + MOBILE SHARED ─── */
+  @media (max-width: 768px) {
+
+    /* Hero */
+    .hero { padding: 48px 20px 40px; }
+    .hero-headline { font-size: clamp(2.4rem, 9vw, 3.6rem); margin-bottom: 20px; }
+    .hero-sub { font-size: 0.92rem; margin-bottom: 28px; max-width: 100%; }
+    .hero-stats {
+      flex-wrap: nowrap;
+      gap: 0;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .hero-stats::-webkit-scrollbar { display: none; }
+    .hero-stat { padding: 0 18px 0 0; margin-right: 18px; flex-shrink: 0; }
+    .hero-stat-value { font-size: 1.25rem; }
+    .hero-stat-label { font-size: 0.62rem; }
+
+    /* Infographic wrapper */
+    .infographic { padding: 0 16px 48px; }
+
+    /* Zone labels — more prominent on mobile */
+    .zone-label {
+      margin-top: 32px;
+      margin-bottom: 14px;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+    }
+
+    /* Zone 1: entry paths — horizontal scroll row instead of stacked */
+    .entry-zone {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+    .entry-zone::-webkit-scrollbar { display: none; }
+    .entry-path {
+      flex: 0 0 160px;
+      min-width: 160px;
+    }
+    .entry-path .path-label { font-size: 0.80rem; }
+    .entry-path .path-stats { font-size: 0.68rem; }
+
+    /* Mode selector — horizontal scroll */
+    .mode-selector {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+      margin-bottom: 20px;
+    }
+    .mode-selector::-webkit-scrollbar { display: none; }
+    .mode-btn {
+      flex: 0 0 148px;
+      min-width: 148px;
+      padding: 14px 12px;
+    }
+    .mode-btn .mode-name { font-size: 0.90rem; }
+    .mode-btn .mode-detail { font-size: 0.65rem; }
+    .mode-btn .mode-cost { font-size: 0.62rem; }
+
+    /* Gateway */
+    .architect-gateway { padding: 16px 28px; max-width: 260px; }
+    .architect-gateway .cmd { font-size: 1.7rem; }
+
+    /* Pause gate */
+    .pause-gate { max-width: 100%; padding: 10px 14px; }
+    .pause-text { font-size: 0.68rem; }
+
+    /* Skills gate */
+    .skills-gate { max-width: 100%; font-size: 0.65rem; padding: 10px 14px; }
+
+    /* Zone 2+3: main grid → single column, hide rails */
+    .main-grid { grid-template-columns: 1fr; gap: 0; }
+    .support-rail { display: none; }
+    .right-panel { display: none; }
+
+    /* Bands — left accent bar treatment */
+    .band { margin-bottom: 8px; border-radius: 10px; }
+    .band-header { padding: 12px 14px; }
+    .band-name { font-size: 0.68rem; letter-spacing: 0.08em; }
+    .band-count { font-size: 0.60rem; }
+
+    /* Section cards — clean left-border card style */
+    .section-card {
+      padding: 12px 14px 12px 14px;
+      gap: 10px;
+      grid-template-columns: auto 1fr auto;
+    }
+    .section-num {
+      font-size: 0.65rem;
+      min-width: 26px;
+      padding-top: 2px;
+    }
+    .section-title { font-size: 0.78rem; line-height: 1.4; }
+    .section-artifact { font-size: 0.68rem; line-height: 1.55; margin-top: 3px; }
+
+    /* Loop row — compact single line */
+    .section-loop {
+      padding: 4px 14px 4px 50px;
+      font-size: 0.56rem;
+      gap: 3px;
+      overflow: hidden;
+    }
+    .loop-node { display: none; }
+    .loop-arrow { display: none; }
+    .loop-save { font-size: 0.58rem; margin-left: 0; }
+
+    /* Founder voice banner */
+    .founder-voice-banner { font-size: 0.67rem; padding: 8px 12px; }
+
+    /* Zone 4: planner preflight stacked */
+    .planner-preflight { grid-template-columns: 1fr; gap: 8px; }
+    .preflight-arrow { display: none; }
+    .preflight-check { padding: 14px; }
+    .preflight-check .check-name { font-size: 0.72rem; }
+    .preflight-check .check-desc { font-size: 0.65rem; }
+
+    /* Planner phases — horizontal scroll */
+    .planner-phases {
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 6px;
+      margin-bottom: 14px;
+    }
+    .planner-phases::-webkit-scrollbar { display: none; }
+    .planner-phases::before { display: none; }
+    .phase-node {
+      flex: 0 0 72px;
+      min-width: 72px;
+      padding: 12px 6px 14px;
+      border-radius: 8px;
+    }
+    .phase-letter { font-size: 0.88rem; }
+    .phase-name { font-size: 0.52rem; line-height: 1.3; }
+    .phase-node .phase-tooltip { display: none !important; }
+
+    /* Zone 5: outputs — horizontal scroll cards */
+    .artifacts-row {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+    .artifacts-row::-webkit-scrollbar { display: none; }
+    .output-artifact {
+      flex: 0 0 220px;
+      min-width: 220px;
+    }
+    .artifact-filename { font-size: 0.82rem; }
+    .artifact-desc { font-size: 0.66rem; }
+
+    /* Dep arrows — single centered */
+    .dep-arrows {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .dep-arrow-col:not(:first-child) { display: none; }
+    .dep-arrow-col svg { width: 40px; }
+    .dep-arrow-label { font-size: 0.55rem; }
+
+    /* Executor */
+    .executor-node { max-width: 100%; padding: 18px 16px; border-radius: 12px; }
+    .exec-name { font-size: 1.15rem; }
+    .exec-subtitle { font-size: 0.65rem; }
+    .exec-rocket { font-size: 1.8rem; }
+    .exec-capabilities { grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 12px; }
+    .exec-cap { padding: 10px; }
+    .exec-cap-name { font-size: 0.68rem; }
+    .exec-cap-desc { font-size: 0.60rem; line-height: 1.45; }
+  }
+
+  /* ─── MOBILE ONLY ─── */
+  @media (max-width: 480px) {
+    .hero { padding: 40px 16px 36px; }
+    .hero-headline { font-size: clamp(2.2rem, 11vw, 3rem); }
+    .hero-eyebrow-label { font-size: 0.54rem; }
+    .infographic { padding: 0 12px 40px; }
+
+    /* Stats stay horizontal scroll, tighter */
+    .hero-stat { padding: 0 14px 0 0; margin-right: 14px; }
+    .hero-stat-value { font-size: 1.15rem; }
+
+    /* Entry paths slightly wider for readability */
+    .entry-path { flex: 0 0 140px; min-width: 140px; }
+    .mode-btn { flex: 0 0 132px; min-width: 132px; }
+
+    /* Section cards */
+    .section-title { font-size: 0.74rem; }
+    .section-artifact { font-size: 0.65rem; }
+    .badge { font-size: 0.46rem; padding: 1px 4px; }
+
+    /* Section loop hidden at smallest size */
+    .section-loop { display: none; }
+
+    /* Planner phases — slightly narrower */
+    .phase-node { flex: 0 0 64px; min-width: 64px; padding: 10px 4px 12px; }
+    .phase-letter { font-size: 0.80rem; }
+    .phase-name { font-size: 0.48rem; }
+
+    /* Executor caps — single column */
+    .exec-capabilities { grid-template-columns: 1fr; }
+    .exec-cap { padding: 9px 11px; }
+
+    /* Artifact cards tighter */
+    .output-artifact { flex: 0 0 190px; min-width: 190px; }
+
+    /* Zone label tighter */
+    .zone-label { margin-top: 24px; }
+
+    /* Pause gate */
+    .pause-gate { padding: 10px 12px; gap: 10px; }
+    .pause-hexagon { width: 26px; height: 26px; font-size: 0.62rem; }
+  }
+
+  /* ─── HORIZONTAL SCROLL HINT (fade on right edge) ─── */
+  @media (max-width: 768px) {
+    .scroll-hint {
+      position: relative;
+    }
+    .scroll-hint::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 4px;
+      width: 44px;
+      background: linear-gradient(270deg, var(--bg) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ MOBILE PROGRESS STRIP ═══ -->
+<div id="mobileStrip" style="
+  display:none;
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:1000;
+  background:rgba(240,234,224,0.92);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border);
+  padding:0 16px;
+  height:36px;
+  align-items:center;
+  gap:0;
+  overflow:hidden;
+">
+  <div style="display:flex;align-items:center;gap:6px;flex:1;overflow:hidden;">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--amber);font-weight:700;white-space:nowrap;">/architect</span>
+    <span style="font-size:0.52rem;color:var(--border-light);margin:0 2px;">›</span>
+    <span id="stripZone" style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--grey-light);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Zone 1</span>
+  </div>
+  <div style="display:flex;gap:3px;flex-shrink:0;">
+    <span class="strip-dot" data-zone="1" style="width:6px;height:6px;border-radius:50%;background:var(--band-discovery);opacity:0.3;transition:opacity 0.3s;"></span>
+    <span class="strip-dot" data-zone="2" style="width:6px;height:6px;border-radius:50%;background:var(--band-commercial);opacity:0.3;transition:opacity 0.3s;"></span>
+    <span class="strip-dot" data-zone="3" style="width:6px;height:6px;border-radius:50%;background:var(--band-quality);opacity:0.3;transition:opacity 0.3s;"></span>
+    <span class="strip-dot" data-zone="4" style="width:6px;height:6px;border-radius:50%;background:var(--band-engineering);opacity:0.3;transition:opacity 0.3s;"></span>
+    <span class="strip-dot" data-zone="5" style="width:6px;height:6px;border-radius:50%;background:var(--violet);opacity:0.3;transition:opacity 0.3s;"></span>
+  </div>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-inner hero-two-col">
+    <!-- LEFT -->
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-rule"></div>
+        <span class="hero-eyebrow-label">Autonomous Blueprint Pipeline</span>
+      </div>
+      <h1 class="hero-headline">The<br><em>Architect</em><br>Agent</h1>
+      <p class="hero-sub">A 13-section autonomous pipeline that turns a founder's idea into an executor-ready product blueprint. Legal, monetisation, UX, architecture, security — locked in sequence, without you micromanaging it.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><span class="hero-stat-value">13</span><span class="hero-stat-label">Blueprint sections</span></div>
+        <div class="hero-stat"><span class="hero-stat-value">05</span><span class="hero-stat-label">Support agents</span></div>
+        <div class="hero-stat"><span class="hero-stat-value">01</span><span class="hero-stat-label">Executor-ready spec</span></div>
+        <div class="hero-stat"><span class="hero-stat-value">∞</span><span class="hero-stat-label">Products blueprinted</span></div>
+      </div>
+    </div>
+    <!-- RIGHT: pipeline mini-diagram -->
+    <div class="hero-right">
+      <div class="hero-pipeline">
+        <div class="hp-title">Pipeline at a glance</div>
+        <div class="hp-entry">
+          <div class="hp-cmd">/architect</div>
+          <div class="hp-arrow">↓</div>
+        </div>
+        <div class="hp-bands">
+          <div class="hp-band hp-discovery">
+            <div class="hp-band-dot"></div>
+            <div class="hp-band-label">Discovery</div>
+            <div class="hp-band-secs">S01 · S02 · S03</div>
+          </div>
+          <div class="hp-flow-line"></div>
+          <div class="hp-band hp-commercial">
+            <div class="hp-band-dot"></div>
+            <div class="hp-band-label">Commercial &amp; Risk</div>
+            <div class="hp-band-secs">S04 · S05 · S06</div>
+          </div>
+          <div class="hp-flow-line"></div>
+          <div class="hp-band hp-quality">
+            <div class="hp-band-dot"></div>
+            <div class="hp-band-label">Quality &amp; Compliance</div>
+            <div class="hp-band-secs">S07 · S08 · S09</div>
+          </div>
+          <div class="hp-flow-line"></div>
+          <div class="hp-band hp-engineering">
+            <div class="hp-band-dot"></div>
+            <div class="hp-band-label">Engineering</div>
+            <div class="hp-band-secs">S10 · S11 · S12 · S13</div>
+          </div>
+          <div class="hp-flow-line"></div>
+        </div>
+        <div class="hp-planner">
+          <div class="hp-planner-icon">⚡</div>
+          <div class="hp-planner-text">Planner synthesis</div>
+          <div class="hp-arrow">↓</div>
+        </div>
+        <div class="hp-outputs">
+          <div class="hp-output">plan.md</div>
+          <div class="hp-output hp-out-spec">spec.md</div>
+          <div class="hp-output">prompt.md</div>
+        </div>
+        <div class="hp-arrow">↓</div>
+        <div class="hp-executor">
+          <span class="hp-exec-icon">🚀</span> Executor
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="infographic">
+
+  <!-- ═══ ZONE 1 ═══ -->
+  <div class="zone-label"><span>Zone 1</span> — Entry &amp; Mode Selection</div>
+
+  <div class="entry-zone scroll-hint">
+    <div class="entry-path" data-path="new">
+      <div class="path-label">NEW project</div>
+      <div class="path-stats">~3.0k tokens<br>~3–5 min setup</div>
+    </div>
+    <div class="entry-path" data-path="continue">
+      <div class="path-label">CONTINUE (resume)</div>
+      <div class="path-stats">~1.2k tokens<br>~1–2 min to resume</div>
+    </div>
+    <div class="entry-path" data-path="add">
+      <div class="path-label">ADD to existing</div>
+      <div class="path-stats">~2.0k tokens<br>~2–4 min analysis</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div style="display:flex;justify-content:center;">
+    <div class="architect-gateway">
+      <div class="cmd">/architect</div>
+      <div class="subtitle">Entry point — auto-detects project state</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div style="display:flex;justify-content:center;">
+    <div class="skills-gate">
+      <span style="margin-right:5px;">⚙</span>
+      <strong>ECC Skills Check</strong> — installs recommended skills once
+      <br><span style="font-size:0.63rem;color:var(--grey);">ecc:architect · frontend-patterns · backend-patterns · database-migrations · security-scan · tdd-workflow</span>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="mode-selector scroll-hint" id="modeSelector">
+    <div class="mode-btn active" data-mode="full">
+      <div class="mode-name">Full</div>
+      <div class="mode-detail">All 13 sections<br>Complete blueprint</div>
+      <div class="mode-cost">~28k tokens · ~35–55 min</div>
+    </div>
+    <div class="mode-btn" data-mode="lite">
+      <div class="mode-name">Lite</div>
+      <div class="mode-detail">6 sections<br>S01–S05 + S09</div>
+      <div class="mode-cost">~14k tokens · ~18–30 min</div>
+    </div>
+    <div class="mode-btn" data-mode="custom">
+      <div class="mode-name">Custom</div>
+      <div class="mode-detail">Exclude by default<br>Gap warnings per exclusion</div>
+      <div class="mode-cost">~varies · ~varies</div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:center;">
+    <div class="pause-gate">
+      <div class="pause-hexagon">⏸</div>
+      <div class="pause-text">PAUSE — Mode selection after S01<br><span style="color:var(--grey);font-size:0.62rem;">Auto-proceeds Full in 10s unless redirected</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ ZONE 2 + 3 ═══ -->
+  <div class="zone-label"><span>Zone 2</span> — 13 Sections Pipeline &nbsp;|&nbsp; <span>Zone 3</span> — Orchestration Layer</div>
+
+  <div class="main-grid">
+
+    <!-- LEFT: SUPPORT AGENTS -->
+    <div class="support-rail">
+      <div class="support-agent" data-agent="injector">
+        <div class="agent-header">
+          <div class="agent-icon injector">🔄</div>
+          <div>
+            <div class="agent-name">Injector</div>
+            <div style="font-size:0.58rem;color:var(--amber);">Autonomous Orchestrator</div>
+          </div>
+        </div>
+        <div class="agent-role">Governs entire loop. Handles FOUNDER_QUESTION pauses, CRITICAL backward updates, failure recovery, mode selection, skip logic with gap warnings.</div>
+        <div class="agent-tags">
+          <span class="agent-tag">loop</span>
+          <span class="agent-tag">recovery</span>
+          <span class="agent-tag">gates</span>
+        </div>
+      </div>
+
+      <div class="support-agent" data-agent="brief">
+        <div class="agent-header">
+          <div class="agent-icon brief">📝</div>
+          <div>
+            <div class="agent-name">Brief Writer</div>
+            <div style="font-size:0.58rem;color:var(--violet-light);">Context Preparer</div>
+          </div>
+        </div>
+        <div class="agent-role">Runs after every section. Prepares curated context brief for next agent. Extracts Founder Voice verbatim for tone-sensitive sections.</div>
+        <div class="agent-tags">
+          <span class="agent-tag">S02</span><span class="agent-tag">S03</span>
+          <span class="agent-tag">S05</span><span class="agent-tag">S08</span>
+        </div>
+      </div>
+
+      <div class="support-agent" data-agent="tracker">
+        <div class="agent-header">
+          <div class="agent-icon tracker">📊</div>
+          <div>
+            <div class="agent-name">Tracker</div>
+            <div style="font-size:0.58rem;color:var(--green);">State Manager</div>
+          </div>
+        </div>
+        <div class="agent-role">Background dispatch after every section. Writes 00-state.md and records claude-mem observation for cross-session recall.</div>
+        <div class="agent-tags">
+          <span class="agent-tag">state</span>
+          <span class="agent-tag">memory</span>
+          <span class="agent-tag">background</span>
+        </div>
+      </div>
+
+      <div class="support-agent" data-agent="change">
+        <div class="agent-header">
+          <div class="agent-icon change">⚡</div>
+          <div>
+            <div class="agent-name">Change Mgmt</div>
+            <div style="font-size:0.58rem;color:var(--red);">Pivot Handler</div>
+          </div>
+        </div>
+        <div class="agent-role">Triggered by founder pivot mid-pipeline. Impact analysis, section doc updates, RESUME_PIPELINE_FROM routing.</div>
+        <div class="agent-tags">
+          <span class="agent-tag">pivot</span>
+          <span class="agent-tag">impact</span>
+          <span class="agent-tag">resume</span>
+        </div>
+      </div>
+
+      <div class="support-agent" data-agent="principles">
+        <div class="agent-header">
+          <div class="agent-icon principles">📐</div>
+          <div>
+            <div class="agent-name">Principles</div>
+            <div style="font-size:0.58rem;color:var(--blue);">Pipeline Directives</div>
+          </div>
+        </div>
+        <div class="agent-role">Foundational layer all 13 agents read. Ask vs. Derive, Output Standard, Active Legal Scan (6 categories), FOUNDER_QUESTION protocol.</div>
+        <div class="agent-tags">
+          <span class="agent-tag">all sections</span>
+          <span class="agent-tag">legal scan</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTRE: PIPELINE -->
+    <div class="pipeline" id="pipeline">
+
+      <div class="founder-voice-banner">
+        🗣 <strong>Founder Voice Thread</strong> — verbatim tone &amp; brand signals extracted from S01, injected into S02, S03, S05, S08
+      </div>
+
+      <!-- DISCOVERY -->
+      <div class="band discovery" id="band-discovery">
+        <div class="band-header" onclick="toggleBand('discovery')">
+          <span class="band-dot"></span>
+          <span class="band-name">Discovery</span>
+          <span class="band-count">S01 – S03</span>
+          <span class="band-toggle">▼</span>
+        </div>
+        <div class="band-sections">
+          <div class="section-card" data-section="s01" onclick="toggleSection(this)">
+            <div class="section-num">S01</div>
+            <div class="section-info">
+              <div class="section-title">Problem &amp; Vision <span class="badge required">REQUIRED</span></div>
+              <div class="section-artifact"><strong>Artifact:</strong> problem statement, outcomes, founder voice, product scope</div>
+              <div class="section-gap">⚠ Gap if skipped: vision drift — executor has no north star</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+          <div class="section-card" data-section="s02" onclick="toggleSection(this)">
+            <div class="section-num">S02</div>
+            <div class="section-info">
+              <div class="section-title">User Roles &amp; Personas <span class="badge required">REQUIRED</span></div>
+              <div class="section-artifact"><strong>Artifact:</strong> role definitions, permission matrix, persona profiles</div>
+              <div class="section-gap">⚠ Gap if skipped: generic product assumptions — no role-based access control defined</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+          <div class="section-card" data-section="s03" onclick="toggleSection(this)">
+            <div class="section-num">S03</div>
+            <div class="section-info">
+              <div class="section-title">Feature Map &amp; User Stories <span class="badge required">REQUIRED</span></div>
+              <div class="section-artifact"><strong>Artifact:</strong> feature tree, user stories, acceptance criteria, MVP scope</div>
+              <div class="section-gap">⚠ Gap if skipped: unclear MVP — executor builds whatever it guesses is needed</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMMERCIAL -->
+      <div class="band commercial" id="band-commercial">
+        <div class="band-header" onclick="toggleBand('commercial')">
+          <span class="band-dot"></span>
+          <span class="band-name">Commercial &amp; Reach</span>
+          <span class="band-count">S04 – S05</span>
+          <span class="band-toggle">▼</span>
+        </div>
+        <div class="band-sections">
+          <div class="section-card" data-section="s04" onclick="toggleSection(this)">
+            <div class="section-num">S04</div>
+            <div class="section-info">
+              <div class="section-title">Monetisation &amp; Stripe</div>
+              <div class="section-artifact"><strong>Artifact:</strong> pricing model, Stripe config, billing flows, subscription logic</div>
+              <div class="section-gap">⚠ Gap if skipped: no payment integration plan — revenue model undefined</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+          <div class="section-card" data-section="s05" onclick="toggleSection(this)">
+            <div class="section-num">S05</div>
+            <div class="section-info">
+              <div class="section-title">SEO &amp; GTM Strategy</div>
+              <div class="section-artifact"><strong>Artifact:</strong> URL structure, keyword clusters, meta strategy, GTM launch plan</div>
+              <div class="section-gap">⚠ Gap if skipped: SEO improvised post-build — weak discoverability and go-to-market</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOUNDER_QUESTION PAUSE -->
+      <div style="display:flex;justify-content:center;margin:8px 0;">
+        <div class="pause-gate" style="max-width:310px;">
+          <div class="pause-hexagon">⏸</div>
+          <div class="pause-text">PAUSE — FOUNDER_QUESTION block<br><span style="color:var(--grey);font-size:0.62rem;">Injector collects, asks inline, resumes</span></div>
+        </div>
+      </div>
+
+      <!-- QUALITY -->
+      <div class="band quality" id="band-quality">
+        <div class="band-header" onclick="toggleBand('quality')">
+          <span class="band-dot"></span>
+          <span class="band-name">Quality &amp; Compliance</span>
+          <span class="band-count">S06 – S08</span>
+          <span class="band-toggle">▼</span>
+        </div>
+        <div class="band-sections">
+          <div class="section-card" data-section="s06" onclick="toggleSection(this)">
+            <div class="section-num">S06</div>
+            <div class="section-info">
+              <div class="section-title">Accessibility &amp; i18n <span class="badge recommended">RECOMMENDED</span></div>
+              <div class="section-artifact"><strong>Artifact:</strong> WCAG level, a11y rules, locale strategy, i18n routing</div>
+              <div class="section-gap">⚠ Gap if skipped: accessibility obligations undefined — exclusion and retro-fit cost</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+          <div class="section-card" data-section="s07" onclick="toggleSection(this)">
+            <div class="section-num">S07</div>
+            <div class="section-info">
+              <div class="section-title">Analytics &amp; Tracking</div>
+              <div class="section-artifact"><strong>Artifact:</strong> event taxonomy, consent gates, KPI mapping, UTM naming</div>
+              <div class="section-gap">⚠ Gap if skipped: no measurement backbone — analytics added ad-hoc post-launch</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+          <div class="section-card" data-section="s08" onclick="toggleSection(this)">
+            <div class="section-num">S08</div>
+            <div class="section-info">
+              <div class="section-title">UX, Interface Design &amp; Branding <span class="badge recommended">RECOMMENDED</span></div>
+              <div class="section-artifact"><strong>Artifact:</strong> UI direction, design system cues, brand language, component list</div>
+              <div class="section-gap">⚠ Gap if skipped: executor builds UI with no design direction — inconsistent UX and tone</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENGINEERING -->
+      <div class="band engineering" id="band-engineering">
+        <div class="band-header" onclick="toggleBand('engineering')">
+          <span class="band-dot"></span>
+          <span class="band-name">Engineering</span>
+          <span class="band-count">S09 – S13</span>
+          <span class="band-toggle">▼</span>
+        </div>
+        <div class="band-sections">
+          <div class="section-card" data-section="s09" onclick="toggleSection(this)">
+            <div class="section-num">S09</div>
+            <div class="section-info">
+              <div class="section-title">Technical Architecture <span class="badge required">REQUIRED</span></div>
+              <div class="section-artifact"><strong>Artifact:</strong> stack, module structure, API contracts, folder layout</div>
+              <div class="section-gap">⚠ Gap if skipped: executor improvises entire tech stack — implementation ambiguity</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+          <div class="section-card" data-section="s10" onclick="toggleSection(this)">
+            <div class="section-num">S10</div>
+            <div class="section-info">
+              <div class="section-title">Data Architecture <span class="badge required">REQUIRED</span></div>
+              <div class="section-artifact"><strong>Artifact:</strong> schema entities, data flows, PII fields, migration plan</div>
+              <div class="section-gap">⚠ Gap if skipped: data model improvised — fragile data model and schema debt</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+          <div class="section-card" data-section="s11" onclick="toggleSection(this)">
+            <div class="section-num">S11</div>
+            <div class="section-info">
+              <div class="section-title">Security &amp; Compliance <span class="badge required">REQUIRED</span></div>
+              <div class="section-artifact"><strong>Artifact:</strong> threat model, auth hardening, compliance notes, regulatory scope</div>
+              <div class="section-gap">⚠ Gap if skipped: security deferred to executor judgment — risk undefined</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+          <div class="section-card" data-section="s12" onclick="toggleSection(this)">
+            <div class="section-num">S12</div>
+            <div class="section-info">
+              <div class="section-title">DevOps &amp; Hosting</div>
+              <div class="section-artifact"><strong>Artifact:</strong> environments, CI/CD pipeline, infra plan, deployment strategy</div>
+              <div class="section-gap">⚠ Gap if skipped: deployment improvised — no reproducible infra</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+          <div class="section-card" data-section="s13" onclick="toggleSection(this)">
+            <div class="section-num">S13</div>
+            <div class="section-info">
+              <div class="section-title">Testing &amp; QA</div>
+              <div class="section-artifact"><strong>Artifact:</strong> test strategy, QA gates, release confidence, E2E flows</div>
+              <div class="section-gap">⚠ Gap if skipped: no test plan — regression risk and quality assurance skipped</div>
+            </div>
+            <div class="section-right">
+              <div class="legal-flag">🚩 LEGAL<div class="legal-tooltip">Active 6-category scan:<ul><li>Data collection (PII)</li><li>Billing obligations</li><li>UGC liability</li><li>Auth (minors/health)</li><li>Tracking/cookies</li><li>Geography obligations</li></ul></div></div>
+            </div>
+          </div>
+          <div class="section-loop">
+            <div class="loop-node">Brief Writer</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Section Agent</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Injector check</div><div class="loop-arrow">→</div>
+            <div class="loop-node">Tracker</div>
+            <div class="loop-save">💾 00-state.md</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pipeline -->
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel" style="">
+
+      <div class="panel-card" id="failureCard">
+        <div class="panel-title">⚠ Failure Recovery Protocol</div>
+        <div class="recovery-step">
+          <div class="step-num">1</div>
+          <div><strong>Failure detected</strong>Empty output or missing doc</div>
+        </div>
+        <div class="recovery-step">
+          <div class="step-num">2</div>
+          <div><strong>Auto-retry once</strong>Same inputs + retry prefix</div>
+        </div>
+        <div class="recovery-step">
+          <div class="step-num">3</div>
+          <div><strong>Founder choice</strong>retry / skip / manual</div>
+        </div>
+        <div class="recovery-step">
+          <div class="step-num">4</div>
+          <div><strong>Stub doc + issue log</strong>Recorded in 00-issues.md</div>
+        </div>
+        <div class="recovery-step">
+          <div class="step-num">5</div>
+          <div><strong>Continue pipeline</strong>From S&#60;N+1&#62; automatically</div>
+        </div>
+      </div>
+
+      <div class="panel-card" id="legendCard">
+        <div class="panel-title">Legend</div>
+        <div style="font-size:0.62rem;color:var(--grey);margin-bottom:6px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;">Node Types</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--bg2);border:1px solid var(--blue);"></div>Section Agent</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--bg2);border:1px solid var(--violet);"></div>Support Agent</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:var(--bg2);border:1px solid var(--green);border-radius:50%;"></div>Checkpoint</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(218,119,86,0.20);border:1px solid var(--amber);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);"></div>Pause Gate</div>
+        <div style="font-size:0.62rem;color:var(--grey);margin:9px 0 6px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;">Line Types</div>
+        <div class="legend-item"><div class="legend-line" style="background:var(--amber);"></div>Invocation</div>
+        <div class="legend-item"><div class="legend-line" style="border-top:2px dashed var(--grey);height:0;"></div>Data / Context</div>
+        <div class="legend-item"><div class="legend-line" style="border-top:2px dashed var(--violet);height:0;"></div>State / Return</div>
+        <div class="legend-item"><div class="legend-line" style="border-top:2px dashed var(--green);height:0;"></div>Optional path</div>
+      </div>
+
+      <div class="panel-card" id="checkpointsCard">
+        <div class="panel-title">💾 Checkpoints</div>
+        <div style="font-size:0.70rem;color:var(--grey-light);line-height:1.85;">
+          <div>✓ Skills gate → <span style="color:var(--green);">00-state.md</span></div>
+          <div>✓ After each section → <span style="color:var(--green);">00-state.md</span></div>
+          <div>✓ After each planner phase → <span style="color:var(--green);">.planner-checkpoint.md</span></div>
+          <div>✓ Phase H approval → <span style="color:var(--green);">claude-mem write</span></div>
+          <div>✓ Executor tasks → <span style="color:var(--green);">.executor-checkpoint.md</span></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /main-grid -->
+
+  <!-- ═══ ZONE 4 ═══ -->
+  <div class="zone-label"><span>Zone 4</span> — Planner Phase</div>
+
+  <div class="planner-zone">
+    <div class="planner-preflight">
+      <div class="preflight-check blocked" data-tip="CRITICAL issues halt planning entirely">
+        <div class="check-icon">🛡</div>
+        <div class="check-name">Open Issues Check</div>
+        <div class="check-desc">Reads 00-issues.md — counts open issues</div>
+        <div class="check-blocked">CRITICAL issues = BLOCKED</div>
+      </div>
+      <div class="preflight-arrow">←</div>
+      <div class="preflight-check" data-tip="Checks 6 cross-section contradiction types">
+        <div class="check-icon">🔗</div>
+        <div class="check-name">gsd-integration-checker</div>
+        <div class="check-desc">Cross-section consistency scan — stack vs hosting, auth vs security, schema vs features, SSR vs stack</div>
+      </div>
+    </div>
+
+    <div class="planner-phases scroll-hint" id="plannerPhases">
+      <div class="phase-node" data-phase="a">
+        <div class="phase-letter">A</div>
+        <div class="phase-name">GSD Discuss</div>
+        <div class="checkpoint-icon">💾</div>
+        <div class="phase-tooltip">Align scope, build order, MVP boundary, integration dependencies, definition of done</div>
+      </div>
+      <div class="phase-node" data-phase="b">
+        <div class="phase-letter">B</div>
+        <div class="phase-name">Extract blueprint</div>
+        <div class="checkpoint-icon">💾</div>
+        <div class="phase-tooltip">Read all 13 section docs. Extract every feature, schema entity, Stripe object, analytics event, integration, hosting requirement</div>
+      </div>
+      <div class="phase-node" data-phase="b-legal">
+        <div class="phase-letter">B⚖</div>
+        <div class="phase-name">Legal synthesis</div>
+        <div class="checkpoint-icon">💾</div>
+        <div class="phase-tooltip">Aggregate all Advisory Notes legal flags. Map obligations. Inject T&amp;C, privacy, consent, compliance tasks into build plan</div>
+      </div>
+      <div class="phase-node" data-phase="c">
+        <div class="phase-letter">C</div>
+        <div class="phase-name">Write tasks</div>
+        <div class="checkpoint-icon">💾</div>
+        <div class="phase-tooltip">Write phased task list with dependencies, build order, acceptance criteria per task</div>
+      </div>
+      <div class="phase-node" data-phase="d">
+        <div class="phase-letter">D</div>
+        <div class="phase-name">Self-review</div>
+        <div class="checkpoint-icon">💾</div>
+        <div class="phase-tooltip">Adversarial dual-review via santa-method. Check architecture enforcement, gaps, missing acceptance criteria</div>
+      </div>
+      <div class="phase-node" data-phase="e">
+        <div class="phase-letter">E</div>
+        <div class="phase-name">Master spec</div>
+        <div class="checkpoint-icon">💾</div>
+        <div class="phase-tooltip">Write unified spec.md — complete specifications, architecture, data contracts, interfaces</div>
+      </div>
+      <div class="phase-node" data-phase="f">
+        <div class="phase-letter">F</div>
+        <div class="phase-name">Executor prompt</div>
+        <div class="checkpoint-icon">💾</div>
+        <div class="phase-tooltip">Write self-contained prompt.md — full context, constraints, deliverables, build order for cold executor session</div>
+      </div>
+      <div class="phase-node" data-phase="g">
+        <div class="phase-letter">G</div>
+        <div class="phase-name">Cost estimate</div>
+        <div class="checkpoint-icon">💾</div>
+        <div class="phase-tooltip">Estimate tokens, time, monthly running costs. Complexity heuristic: CRUD 2k, auth 5k, integration 8k, AI feature 10k</div>
+      </div>
+      <div class="phase-node phase-h" data-phase="h">
+        <div class="phase-letter">H</div>
+        <div class="phase-name">Founder approval gate</div>
+        <div class="checkpoint-icon" style="color:var(--amber);">⏸</div>
+        <div class="phase-tooltip">MANDATORY PAUSE. Founder reviews plan, cost estimate, scope. Approves or redirects. claude-mem write on approval</div>
+      </div>
+      <div class="phase-node" data-phase="i">
+        <div class="phase-letter">I–J</div>
+        <div class="phase-name">Checkpoint + memory</div>
+        <div class="checkpoint-icon">💾</div>
+        <div class="phase-tooltip">Write .planner-checkpoint.md. Record key plan decisions to claude-mem for cross-session recall</div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:center;margin-bottom:14px;">
+      <div class="pause-gate" style="max-width:420px;">
+        <div class="pause-hexagon">⏸</div>
+        <div class="pause-text">PAUSE — Phase H: Founder Approval Gate (MANDATORY)<br><span style="color:var(--grey);font-size:0.62rem;">Shows build cost · build time · monthly running costs · scope summary</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ZONE 5 ═══ -->
+  <div class="zone-label"><span>Zone 5</span> — Outputs &amp; Handoff</div>
+
+  <!-- Three artifacts in equal columns -->
+  <div class="artifacts-row scroll-hint">
+    <div class="output-artifact" onclick="toggleArtifact(this)">
+      <div class="artifact-filename">plan.md</div>
+      <div class="artifact-desc">Phased implementation plan with tasks, dependencies, build order</div>
+      <div class="artifact-detail"><ul>
+        <li>Phases &amp; milestones</li>
+        <li>Task breakdown</li>
+        <li>Dependencies</li>
+        <li>Build order</li>
+        <li>Acceptance criteria per task</li>
+      </ul></div>
+    </div>
+    <div class="output-artifact" onclick="toggleArtifact(this)">
+      <div class="artifact-filename">spec.md</div>
+      <div class="artifact-desc">Master engineering specification covering all architectural decisions</div>
+      <div class="artifact-detail"><ul>
+        <li>Complete specifications</li>
+        <li>Architecture &amp; data models</li>
+        <li>Interfaces &amp; contracts</li>
+        <li>Requirements</li>
+        <li>Legal obligations</li>
+      </ul></div>
+    </div>
+    <div class="output-artifact" onclick="toggleArtifact(this)">
+      <div class="artifact-filename">prompt.md</div>
+      <div class="artifact-desc">Self-contained executor prompt — cold session needs no prior context</div>
+      <div class="artifact-detail"><ul>
+        <li>Full context</li>
+        <li>Constraints</li>
+        <li>Acceptance criteria</li>
+        <li>Deliverables</li>
+        <li>Build sequence</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- Animated arrows pointing DOWN to executor -->
+  <div class="dep-arrows">
+    <div class="dep-arrow-col">
+      <svg width="100%" height="44" viewBox="0 0 160 44" preserveAspectRatio="none">
+        <defs>
+          <marker id="arrA" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#DA7756"/>
+          </marker>
+        </defs>
+        <line x1="80" y1="2" x2="80" y2="40" stroke="#DA7756" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrA)" opacity="0.8">
+          <animate attributeName="stroke-dashoffset" from="0" to="-16" dur="1.0s" repeatCount="indefinite"/>
+        </line>
+      </svg>
+      <div class="dep-arrow-label" style="color:var(--amber);">tasks &amp; phases</div>
+    </div>
+    <div class="dep-arrow-col">
+      <svg width="100%" height="44" viewBox="0 0 160 44" preserveAspectRatio="none">
+        <defs>
+          <marker id="arrB" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#9B7FD4"/>
+          </marker>
+        </defs>
+        <line x1="80" y1="2" x2="80" y2="40" stroke="#9B7FD4" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrB)" opacity="0.8">
+          <animate attributeName="stroke-dashoffset" from="0" to="-16" dur="1.2s" repeatCount="indefinite"/>
+        </line>
+      </svg>
+      <div class="dep-arrow-label" style="color:var(--violet-light);">architecture &amp; contracts</div>
+    </div>
+    <div class="dep-arrow-col">
+      <svg width="100%" height="44" viewBox="0 0 160 44" preserveAspectRatio="none">
+        <defs>
+          <marker id="arrC" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L7,3 z" fill="#8C857C"/>
+          </marker>
+        </defs>
+        <line x1="80" y1="2" x2="80" y2="40" stroke="#8C857C" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrC)" opacity="0.8">
+          <animate attributeName="stroke-dashoffset" from="0" to="-16" dur="0.85s" repeatCount="indefinite"/>
+        </line>
+      </svg>
+      <div class="dep-arrow-label">full context &amp; prompt</div>
+    </div>
+  </div>
+
+  <!-- Executor — full width, centered -->
+  <div class="executor-wrapper">
+    <div class="executor-node">
+      <div class="executor-header">
+        <div class="exec-rocket">🚀</div>
+        <div class="exec-title-block">
+          <div class="exec-name">Executor</div>
+          <div class="exec-subtitle">Cold session — no prior context needed. Reads plan.md + spec.md + prompt.md and builds task by task.</div>
+        </div>
+      </div>
+      <div class="exec-capabilities">
+        <div class="exec-cap">
+          <div class="exec-cap-header"><span class="exec-cap-icon">⌨</span><span class="exec-cap-name">Coding</span></div>
+          <div class="exec-cap-desc">Implements tasks from plan.md task by task — files, components, wired integrations</div>
+        </div>
+        <div class="exec-cap">
+          <div class="exec-cap-header"><span class="exec-cap-icon">🐛</span><span class="exec-cap-name">Debugging</span></div>
+          <div class="exec-cap-desc">Systematic-debugging skill — root-cause before fix, no random patches</div>
+        </div>
+        <div class="exec-cap">
+          <div class="exec-cap-header"><span class="exec-cap-icon">✅</span><span class="exec-cap-name">Verification</span></div>
+          <div class="exec-cap-desc">verification-before-completion — evidence before any done claim</div>
+        </div>
+        <div class="exec-cap">
+          <div class="exec-cap-header"><span class="exec-cap-icon">💾</span><span class="exec-cap-name">Checkpoints</span></div>
+          <div class="exec-cap-desc">Writes .executor-checkpoint.md after each task — crash-safe resume</div>
+        </div>
+        <div class="exec-cap">
+          <div class="exec-cap-header"><span class="exec-cap-icon">🔒</span><span class="exec-cap-name">Plan-locked</span></div>
+          <div class="exec-cap-desc">No scope creep — deviations surfaced to founder, not silently absorbed</div>
+        </div>
+        <div class="exec-cap">
+          <div class="exec-cap-header"><span class="exec-cap-icon">📋</span><span class="exec-cap-name">Spec-aware</span></div>
+          <div class="exec-cap-desc">Reads spec.md constraints before each task — architecture decisions enforced</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="margin-top:64px;padding-top:24px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:16px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.60rem;color:var(--grey);line-height:1.85;">
+      <span style="color:var(--amber-dim);">/architect</span> · 13-section autonomous pipeline<br>
+      <span style="color:var(--border-light);">~/.claude/agents/ · Claude Code</span>
+    </div>
+    <div style="font-size:0.60rem;color:var(--grey);text-align:right;line-height:1.85;">
+      Click sections to expand gaps · Click bands to collapse · Hover agents to highlight connections<br>
+      <span style="color:var(--border-light);">Toggle mode buttons to preview Lite inclusions</span>
+    </div>
+  </div>
+
+</div><!-- /infographic -->
+
+<script>
+  // ─── LEGAL TOOLTIP PORTAL ───
+  (function() {
+    document.querySelectorAll('.legal-flag').forEach(flag => {
+      const tip = flag.querySelector('.legal-tooltip');
+      if (!tip) return;
+      document.body.appendChild(tip);
+      flag.addEventListener('mouseenter', () => {
+        const r = flag.getBoundingClientRect();
+        tip.style.display = 'block';
+        const tipW = 220;
+        let left = r.right - tipW;
+        if (left < 8) left = 8;
+        tip.style.left = left + 'px';
+        tip.style.top = (r.bottom + 6) + 'px';
+      });
+      flag.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+    });
+  })();
+
+  // Animate in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 55);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.entry-path, .support-agent, .section-card, .panel-card, .phase-node, .output-artifact')
+    .forEach(el => observer.observe(el));
+
+  // Mode selector
+  const modeBtns = document.querySelectorAll('.mode-btn');
+  const liteExcludes = ['s06','s07','s08','s10','s11','s12','s13'];
+  modeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      modeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode = btn.dataset.mode;
+      document.querySelectorAll('.section-card').forEach(card => {
+        card.classList.remove('dimmed', 'highlighted');
+        if (mode === 'lite' && liteExcludes.includes(card.dataset.section)) {
+          card.classList.add('dimmed');
+        }
+      });
+    });
+  });
+
+  // Section expand
+  function toggleSection(card) {
+    const wasExpanded = card.classList.contains('expanded');
+    document.querySelectorAll('.section-card.expanded').forEach(c => c.classList.remove('expanded'));
+    if (!wasExpanded) card.classList.add('expanded');
+  }
+
+  // Band collapse
+  function toggleBand(name) {
+    const band = document.getElementById('band-' + name);
+    const sections = band.querySelector('.band-sections');
+    if (band.classList.contains('collapsed')) {
+      band.classList.remove('collapsed');
+      sections.style.maxHeight = sections.scrollHeight + 'px';
+      sections.style.opacity = '1';
+    } else {
+      band.classList.add('collapsed');
+      sections.style.maxHeight = '0';
+      sections.style.opacity = '0';
+    }
+  }
+
+  // Support agent highlight
+  const agentSectionMap = {
+    injector:   ['s01','s02','s03','s04','s05','s06','s07','s08','s09','s10','s11','s12','s13'],
+    brief:      ['s02','s03','s05','s08'],
+    tracker:    ['s01','s02','s03','s04','s05','s06','s07','s08','s09','s10','s11','s12','s13'],
+    change:     ['s01','s02','s03','s04','s05','s06','s07','s08','s09','s10','s11','s12','s13'],
+    principles: ['s01','s02','s03','s04','s05','s06','s07','s08','s09','s10','s11','s12','s13']
+  };
+  document.querySelectorAll('.support-agent').forEach(agent => {
+    agent.addEventListener('mouseenter', () => {
+      const sections = agentSectionMap[agent.dataset.agent] || [];
+      document.querySelectorAll('.section-card').forEach(card => {
+        card.classList.toggle('highlighted', sections.includes(card.dataset.section));
+        card.classList.toggle('dimmed', !sections.includes(card.dataset.section));
+      });
+    });
+    agent.addEventListener('mouseleave', () => {
+      document.querySelectorAll('.section-card').forEach(card => {
+        card.classList.remove('highlighted', 'dimmed');
+      });
+    });
+  });
+
+  // Artifact expand
+  function toggleArtifact(el) { el.classList.toggle('expanded'); }
+
+  // Phase node stagger
+  document.querySelectorAll('.phase-node').forEach((node, i) => {
+    node.style.transitionDelay = (i * 70) + 'ms';
+  });
+
+  // Entry path click highlight
+  document.querySelectorAll('.entry-path').forEach(path => {
+    path.addEventListener('click', () => {
+      document.querySelectorAll('.entry-path').forEach(p => p.style.borderColor = '');
+      path.style.borderColor = 'var(--amber)';
+    });
+  });
+
+  // ─── MOBILE PROGRESS STRIP ───
+  (function() {
+    const strip = document.getElementById('mobileStrip');
+    const stripZone = document.getElementById('stripZone');
+    const dots = document.querySelectorAll('.strip-dot');
+
+    function isMobile() { return window.innerWidth <= 768; }
+
+    // Zone landmark elements
+    const zones = [
+      { el: document.querySelector('.infographic'), num: 1, label: 'Zone 1 — Entry' },
+      { el: document.getElementById('band-discovery'), num: 2, label: 'Zone 2 — Discovery' },
+      { el: document.getElementById('band-commercial'), num: 3, label: 'Zone 2 — Commercial' },
+      { el: document.getElementById('band-quality'), num: 4, label: 'Zone 2 — Quality' },
+      { el: document.getElementById('band-engineering'), num: 5, label: 'Zone 2 — Engineering' },
+      { el: document.querySelector('.planner-zone'), num: 6, label: 'Zone 4 — Planner' },
+      { el: document.querySelector('.artifacts-row'), num: 7, label: 'Zone 5 — Outputs' },
+    ];
+
+    // Map zone labels to dot indices (1-5)
+    const dotMap = {1:1, 2:1, 3:2, 4:3, 5:4, 6:4, 7:5};
+
+    let lastZone = 0;
+    function updateStrip() {
+      if (!isMobile()) { strip.style.display = 'none'; return; }
+      strip.style.display = 'flex';
+      const scrollY = window.scrollY + 50;
+      let current = zones[0];
+      for (const z of zones) {
+        if (!z.el) continue;
+        if (z.el.getBoundingClientRect().top + window.scrollY <= scrollY) current = z;
+      }
+      if (current.num !== lastZone) {
+        lastZone = current.num;
+        stripZone.textContent = current.label;
+        const activeDot = dotMap[current.num] || 1;
+        dots.forEach(d => {
+          d.style.opacity = parseInt(d.dataset.zone) === activeDot ? '1' : '0.3';
+        });
+      }
+      // Add body top padding on first mobile show
+      document.body.style.paddingTop = '36px';
+    }
+
+    window.addEventListener('scroll', updateStrip, { passive: true });
+    window.addEventListener('resize', updateStrip);
+    updateStrip();
+  })();
+</script>
+</body>
+</html>
