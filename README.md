@@ -137,7 +137,7 @@ The orchestrator runs without stopping. It pauses only when:
 |---------------|---------|---------|
 | [ECC](https://github.com/affaan-m/everything-claude-code) | `/plugin install ecc@ecc` | All agents — specialist skills for security, DB, frontend, testing, architecture |
 | [Superpowers](https://github.com/anthropics/claude-plugins-official) | `/plugin install superpowers@claude-plugins-official` | Executor, Planner — TDD, subagent-driven development, writing plans |
-| [GSD](https://www.npmjs.com/package/get-shit-done-cc) | `npx get-shit-done-cc@latest` | Planner, Executor — discuss, plan, verify, ship workflow |
+| [GSD Redux](https://github.com/open-gsd/get-shit-done-redux) | `npx @opengsd/get-shit-done-redux@latest` | Planner, Executor — discuss, plan, verify, ship workflow |
 | [claude-mem](https://github.com/thedotmack/claude-mem) | `/plugin install claude-mem@thedotmack` | All section agents — memory search across sessions |
 | [diagram-design](https://github.com/cathrynlavery/diagram-design) | `/plugin install diagram-design@diagram-design` | S09, S10, S11 — architecture and ERD diagrams |
 | [frontend-design](https://github.com/anthropics/claude-plugins-official) | `/plugin install frontend-design@claude-plugins-official` | S08 — frontend design patterns |
