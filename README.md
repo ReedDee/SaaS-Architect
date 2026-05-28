@@ -1,6 +1,6 @@
 # SaaS Architect
 
-![SaaS Architect](Architect Infographic.png)
+[SaaS Architect](Architect Infographic.png)
 
 
 **A 13-agent AI blueprint pipeline for Claude Code.**
