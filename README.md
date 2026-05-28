@@ -7,7 +7,7 @@ ChatGPT Image May 28, 2026, 09_46_34 AM.png
 
 Describe your product idea. The system interviews you, makes decisions, and produces a complete implementation plan — with architecture, legal exposure, monetisation, security, DevOps, and a fully specified executor prompt — ready to build.
 
-→ **[See it in action](https://reeddee.github.io/SaaS-Architect/)**
+→ **[See it in action][(https://reeddee.github.io/SaaS-Architect/)]**
 
 ---
 
