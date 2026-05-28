@@ -1,5 +1,7 @@
 # SaaS Architect
-Architect Infographic.png
+
+![SaaS Architect](Architect Infographic.png)
+
 
 **A 13-agent AI blueprint pipeline for Claude Code.**
 ChatGPT Image May 28, 2026, 09_46_34 AM.png
