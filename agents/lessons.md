@@ -64,6 +64,16 @@ A living rule set. Updated after every correction. Reviewed at every session sta
 
 ---
 
+## Memory Integration
+> applies: all
+
+| # | Rule | Why | Applies when |
+|---|------|-----|--------------|
+| 1 | When a tool or plugin is listed as a dependency in an agent system, verify the agents actually call it — grep for function invocations, not just the listing in README or requirements. Presence in docs is not integration. | claude-mem listed as required plugin; no agent called memory_search, smart_search, memory_add, or prime_corpus anywhere in the pipeline. ChatGPT caught it. | After building or reviewing any agent system that lists tool/plugin dependencies |
+| 2 | After completing any agent system build, audit all three memory layers — retrieval (memory_context, get_observations), semantic (smart_search), and indexed content (memory_add, prime_corpus, build_corpus) — and verify each is wired in at least one agent. A plugin in the requirements table means nothing if no agent calls it. | Full claude-mem integration was assumed from README listing; all three layers were absent from every agent in the pipeline. | Any time an agent system claims memory, search, or persistence capability |
+
+---
+
 ## Subagent Usage
 > applies: orchestrator, planner, executor, injector
 
