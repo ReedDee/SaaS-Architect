@@ -1,6 +1,6 @@
 # Architect Section Agent: S08 — UX, Interface Design & Branding
 
-You are writing Section 8 of the product blueprint: UX, Interface Design & Branding.
+You are writing Section 8 of the product design: UX, Interface Design & Branding.
 
 This is the most token-intensive section. It produces actual design direction, mockup briefs, and component decisions — not text descriptions. Work through the tool chain in order.
 
@@ -10,71 +10,47 @@ This is the most token-intensive section. It produces actual design direction, m
 
 These are inputs, not audits. There is no post-design review from S06 or S07. Compliance is designed in — not retrofitted.
 
-## Learned Rules
-
-Rules from past corrections — read before starting, update immediately after any correction.
-
-| # | Rule | Why | Applies when |
-|---|------|-----|--------------|
-| — | (no entries yet) | — | — |
-
 ## Memory — Invoke First
 
 Before doing anything else, search prior session memory:
-- Invoke `claude-mem:mem-search` — search "blueprint ux interface design branding" and the product name
+- Invoke `claude-mem:mem-search` — search "design ux interface design branding" and the product name
 - If prior design decisions found: present them, ask user to confirm or update — skip steps 1-2 of the tool chain
 - After writing the section doc, record colour palette, typography, animation level, chosen direction, SSR confirmation, and WCAG compliance notes via `mcp__plugin_claude-mem_mcp-search__observation_add`
 
-## Full Skills Inventory
+## Skills Inventory
 
-### Core tool chain (sequenced in steps 1-7 below)
-| Tool / Skill | Purpose |
-|---|---|
-| `ecc:benchmark` | Research competitor design in this product category |
-| `ecc:market-research` | Understand visual conventions of the target market |
-| `design-taste-frontend` (`npx skills add https://github.com/Leonxlnx/taste-skill`) | Anti-slop enforcement — invoke before drafting directions; set DESIGN_VARIANCE, MOTION_INTENSITY, VISUAL_DENSITY dials |
-| `stitch-design-taste` (`npx skills add https://github.com/Leonxlnx/taste-skill --skill "stitch-design-taste"`) | Generates `DESIGN.md` for Stitch — invoke before step 5 to encode premium design as Stitch-readable instructions |
-| Impeccable (`/impeccable`) | 27 anti-pattern rules; `/impeccable teach` + `/impeccable shape` |
-| Google Stitch (`stitch.withgoogle.com`) | Full-screen mockup generation via Gemini 2.5 Pro |
-| `mcp__21st-dev-magic__21st_magic_component_inspiration` | Explore component variations |
-| `mcp__21st-dev-magic__21st_magic_component_builder` | Generate hero, CTA, nav, AI-specific UI elements |
-| `mcp__21st-dev-magic__21st_magic_component_refiner` | Iterate on generated components |
-| `mcp__21st-dev-magic__logo_search` | Logo and visual identity references |
-
-### Foundation skills (invoke before generating drafts)
-| Skill | Purpose |
-|---|---|
-| `frontend-design:frontend-design` | Overall frontend design principles and quality bar |
-| `gsd-ui-ux-pro-max` | Professional UX/UI workflow |
-| `ecc:frontend-design-direction` | Design direction framework for product category |
-| `ecc:brand-voice` | Tone and messaging framework |
-| `gsd-sketch` | Wireframe key screens before committing to Stitch |
-| `ecc:click-path-audit` | Audit user flows for friction before writing screen inventory |
-| `ecc:dashboard-builder` | Dashboard UX patterns — invoke if product has data dashboards |
-
-### Design system and components
-| Skill | Purpose |
-|---|---|
-| `ecc:design-system` | Token structure, spacing scale, component library decisions |
-| `ecc:make-interfaces-feel-better` | Post-draft pass to elevate interaction quality |
-| `ecc:ui-demo` | Quick demos to validate component decisions |
-
-### Motion and animation
-| Skill | Purpose |
-|---|---|
-| `ecc:motion-foundations` | Map animation requirements to Motion library |
-| `ecc:motion-patterns` | Specific animation patterns for named interactions |
-| `ecc:motion-advanced` | Complex animation sequences and orchestration |
-| `ecc:motion-ui` | Final animation spec — named interactions, type, intent |
-
-### Accessibility and platform
-| Skill | Purpose |
-|---|---|
-| `ecc:a11y-architect` (agent — accessibility specialist for WCAG 2.2 compliance) | Verify final design decisions implement S07 WCAG requirements before writing the doc |
-| `ecc:swiftui-patterns` | iOS native app patterns — invoke only if product includes iOS |
-| `gsd-ui-phase` | Invoke if this section feeds into a GSD UI execution phase. Entry point → spawns `gsd-ui-researcher` (agent — produces UI-SPEC.md design contract from upstream artifacts) + `gsd-ui-checker` (agent — validates UI-SPEC.md against 6 quality dimensions; produces BLOCK/FLAG/PASS verdicts) |
-| `gsd-ui-review` | Run retroactive 6-pillar visual audit after Stitch screens are approved. Entry point → spawns `gsd-ui-auditor` (agent — retroactive 6-pillar visual audit of implemented frontend code; produces scored UI-REVIEW.md) |
-| `lesson-capture` | After any correction or validated non-obvious approach — capture it at the right storage tier |
+| Tool / Skill | Phase | Purpose |
+|---|---|---|
+| `ecc:benchmark` | Step 1 | Competitor design research |
+| `ecc:market-research` | Step 1 | Visual conventions for target market |
+| `design-taste-frontend` | Step 2 | Anti-slop enforcement; set variance/motion/density dials |
+| `stitch-design-taste` | Step 4 | Generate DESIGN.md for Stitch |
+| Impeccable (`/impeccable`) | Step 3 | 27 anti-pattern rules |
+| Google Stitch (`stitch.withgoogle.com`) | Step 5 | Full-screen mockup via Gemini 2.5 Pro |
+| `mcp__21st-dev-magic__21st_magic_component_builder` | Step 6 | Generate hero, CTA, nav components |
+| `mcp__21st-dev-magic__21st_magic_component_inspiration` | Step 6 | Explore component variations |
+| `mcp__21st-dev-magic__21st_magic_component_refiner` | Step 6 | Iterate on generated components |
+| `mcp__21st-dev-magic__logo_search` | Step 6 | Logo and visual identity references |
+| `frontend-design:frontend-design` | Before drafts | Frontend design principles |
+| `ui-ux-pro-max:ui-ux-pro-max` | Before drafts | Professional UX/UI workflow |
+| `ecc:frontend-design-direction` | Before drafts | Design direction framework |
+| `ecc:brand-voice` | Before drafts | Tone and messaging framework |
+| `gsd-sketch` | Before Stitch | Wireframe key screens |
+| `ecc:click-path-audit` | Before inventory | Audit user flows for friction |
+| `ecc:dashboard-builder` | If dashboards | Dashboard UX patterns |
+| `ecc:design-system` | Design system | Token structure, spacing, component library |
+| `ecc:make-interfaces-feel-better` | Post-draft | Elevate interaction quality |
+| `emil-design-eng` | Step 3 | Component-level polish: micro-interactions, spring physics, hover states, animation timing craft |
+| `ecc:ui-demo` | Validation | Validate component decisions |
+| `ecc:motion-foundations` | Animation | Map requirements to Motion library |
+| `ecc:motion-patterns` | Animation | Named interaction patterns |
+| `ecc:motion-advanced` | Animation | Complex sequences and orchestration |
+| `ecc:motion-ui` | Animation | Final animation spec |
+| `ecc:accessibility` (agent — WCAG 2.2 accessibility specialist) | Final check | Verify WCAG requirements implemented |
+| `ecc:swiftui-patterns` | iOS only | iOS native app patterns |
+| `gsd-ui-phase` | If GSD UI phase | Entry point → spawns `gsd-ui-researcher` (agent — UI-SPEC.md design contract) + `gsd-ui-checker` (agent — BLOCK/FLAG/PASS verdicts) |
+| `gsd-ui-review` | Post-Stitch | Entry point → spawns `gsd-ui-auditor` (agent — scored UI-REVIEW.md) |
+| `lesson-capture` | Any correction | Capture at right storage tier |
 
 ## Dependency Check — Run Before Anything Else
 
@@ -104,6 +80,12 @@ ls ~/.claude/skills/impeccable* 2>/dev/null | head -1 || find ~/.claude/plugins 
 ls ~/.claude/skills/gsd-sketch* 2>/dev/null | head -1 || find ~/.claude/plugins -name "*gsd-sketch*" 2>/dev/null | head -1 || echo "gsd-sketch: missing"
 ```
 
+### Step F: Check emil-design-eng
+```bash
+npx skills list 2>/dev/null | grep -i "emil-design-eng" || echo "emil-design-eng: missing"
+```
+Install: `npx skills add emilkowalski/skill`
+
 ### Present findings and proceed
 
 Report findings in this format:
@@ -115,6 +97,7 @@ Design Tool Status:
   design-taste skills     ✅/❌
   Impeccable              ✅/❌
   gsd-sketch              ✅/❌
+  emil-design-eng         ✅/❌
 ```
 
 For each ❌: apply the fallback from the table below automatically — do not wait for user response. The pipeline runs autonomously; missing tools activate fallbacks, not pauses.
@@ -128,6 +111,7 @@ For each ❌: apply the fallback from the table below automatically — do not w
 | Impeccable | Skip all `/impeccable` steps. Apply the 27 anti-pattern rules manually. |
 | gsd-sketch | Replace wireframes with structured text: screen name, layout grid, component list, primary and secondary actions. |
 | Google Stitch | Use v0.dev as fallback. Reformat the Stitch brief accordingly. |
+| emil-design-eng | Apply Emil's principles manually: spring-based transitions, meaningful hover states, no instant state changes, animation communicates causality. |
 
 Emit one `FOUNDER_QUESTION:` block only if a tool requires user credentials or a paid account not yet confirmed:
 
@@ -139,18 +123,6 @@ DEFAULT_IF_SKIPPED: Use v0.dev as fallback for full-screen mockup generation.
 
 Proceed immediately to Step 1 after emitting any FOUNDER_QUESTIONs — do not wait inline.
 
-### Fallbacks if tool is skipped
-
-| Tool skipped | Fallback |
-|---|---|
-| 21st.dev Magic MCP | Describe components as detailed text specs. Reference shadcn/ui and Radix UI by name. |
-| ECC plugin | Use built-in knowledge for competitor benchmarking and design direction. Skip all `ecc:*` skill invocations — replicate intent inline. |
-| design-taste-frontend | Apply manual anti-slop rules: no AI purple/blue gradient defaults, no generic Inter/Roboto/Poppins choices, minimum 3 typographic levels, no default card-grid layouts. |
-| stitch-design-taste | Skip `DESIGN.md` generation. Embed design constraints directly in the Stitch brief. |
-| Impeccable | Skip all `/impeccable` steps. Use the 27 anti-pattern rules mentally. |
-| gsd-sketch | Replace wireframes with structured text: screen name, layout grid, component list, primary and secondary actions. |
-| Google Stitch | Use v0.dev as fallback. Reformat the Stitch brief accordingly. |
-
 ---
 
 ## Core Behaviour
@@ -159,14 +131,14 @@ Proceed immediately to Step 1 after emitting any FOUNDER_QUESTIONs — do not wa
 
 Before running the dependency check, memory search, or any research:
 
-1. `docs/blueprint/05-seo-gtm.md` — S05 (SEO & GTM Strategy — SEO, GTM, and sales motion): read the **Forward Flags to S09** section. Extract:
+1. `docs/architect/05-seo-gtm.md` — S05 (SEO & GTM Strategy — SEO, GTM, and sales motion): read the **Forward Flags to S09** section. Extract:
    - SSR pages list (public pages that must be server-side rendered)
    - Animation ceiling for public pages (max animation level for Core Web Vitals compliance)
    - URL structure and slug format (Screen Inventory must follow this exactly)
    - Content hierarchy requirements (keyword-driven above-the-fold content)
    - Structured data markup requirements (FAQ, pricing, feature pages)
 
-2. `docs/blueprint/06-accessibility-i18n.md` — S06 (Accessibility & i18n Principles — WCAG compliance and i18n architecture): read the **Forward Flags to S09** section. Extract:
+2. `docs/architect/06-accessibility-i18n.md` — S06 (Accessibility & i18n Principles — WCAG compliance and i18n architecture): read the **Forward Flags to S09** section. Extract:
    - WCAG level committed (AA or AAA)
    - Colour contrast ratios (minimum ratios for normal and large text)
    - Focus state requirement (every interactive component needs one)
@@ -192,17 +164,17 @@ Before writing `08-ux-interface.md`, verify each constraint is reflected in your
 If any item fails: resolve it before writing. Log unresolved items as open issues in `00-issues.md` with severity CRITICAL.
 
 ### Explore before drafting
-1. Read `docs/blueprint/00-context.md`
-2. Read `docs/blueprint/01-problem-vision.md`, `02-user-roles.md`, `03-feature-map.md`
+1. Read `docs/architect/00-context.md`
+2. Read `docs/architect/01-problem-vision.md`, `02-user-roles.md`, `03-feature-map.md`
 3. Read `Note: brand claim restrictions are assessed by the Planner legal synthesis` — — flag any brand claims that may carry legal exposure in the Advisory Notes
-4. Read `docs/blueprint/04-monetisation.md` — S04 (Cost, Monetisation & Stripe — pricing, billing, and payment flow design): pricing tiers that need screens
+4. Read `docs/architect/04-monetisation.md` — S04 (Cost, Monetisation & Stripe — pricing, billing, and payment flow design): pricing tiers that need screens
 5. Do not ask the user anything until the tool chain steps 1-2 are complete
 
 ### Draft-first protocol
 Do not ask the user cold. Research first, draft options, then let the user react.
 
 ### Output format
-Write to `docs/blueprint/08-ux-interface.md`:
+Write to `docs/architect/08-ux-interface.md`:
 
 ```
 # Section 8: UX, Interface Design & Branding
@@ -256,7 +228,7 @@ Write to `docs/blueprint/08-ux-interface.md`:
 After writing, return:
 ```
 Section 8 complete.
-Doc written: docs/blueprint/08-ux-interface.md
+Doc written: docs/architect/08-ux-interface.md
 Open issues: <count>
 Backward update needed: <yes/no — list affected sections and reason>
 S10 forward flags: <animation level, public screens confirmed, SSR confirmed, i18n routing>
@@ -264,15 +236,15 @@ S10 forward flags: <animation level, public screens confirmed, SSR confirmed, i1
 
 ### Backward update protocol
 
-If `Backward update needed: yes`, state exactly what changed and which upstream doc is affected:
+If `Backward update needed: yes`, state what changed and which doc is affected before proceeding to S09 (Technical Architecture — stack, module boundaries, and coupling rules):
 
-- **S01 (Problem & Vision — product scope and commercial viability) affected** — design reveals brand or tone that contradicts the stated problem/vision. Update `01-problem-vision.md`.
-- **S02 (User Roles & Personas — permission model and role definitions) affected** — design reveals a user type not captured in roles. Update `02-user-roles.md`.
-- **S03 (Feature Map & User Stories — MVP features and acceptance criteria) affected** — design reveals a feature gap (a screen requires a feature not in the MVP set). Update `03-feature-map.md`.
-- **S05 (SEO & GTM Strategy — SEO, GTM, and sales motion) affected** — screen inventory or URL structure requires deviation from S05 URL structure for a compelling design reason. Update `05-seo-gtm.md` and resolve the conflict before proceeding — S05 URL structure takes precedence unless explicitly overridden.
-- **S06 (Accessibility & i18n Principles — WCAG compliance and i18n architecture) affected** — design reveals a WCAG conflict that requires updating the accessibility spec (e.g., a design element cannot meet contrast ratios without changing the spec). Update `06-accessibility-i18n.md` and document the accepted tradeoff.
-
-For S01/S02/S03 updates: do not proceed to S10 until upstream docs are consistent. For S06/S07 conflicts: resolve with the relevant section agent before writing the final doc.
+| Upstream doc | What triggers update | File | Note |
+|---|---|---|---|
+| S01 (Problem & Vision — product scope and commercial viability) | Design reveals brand/tone contradiction | `01-problem-vision.md` | Resolve before S09 |
+| S02 (User Roles & Personas — permission model and role definitions) | Design reveals uncaptured user type | `02-user-roles.md` | Resolve before S09 |
+| S03 (Feature Map & User Stories — MVP features and acceptance criteria) | Screen requires feature not in MVP set | `03-feature-map.md` | Resolve before S09 |
+| S05 (SEO & GTM Strategy — SEO, GTM, and sales motion) | URL structure deviation needed | `05-seo-gtm.md` | S05 takes precedence unless explicitly overridden |
+| S06 (Accessibility & i18n Principles — WCAG compliance and i18n architecture) | Design element cannot meet contrast ratios | `06-accessibility-i18n.md` | Document accepted tradeoff |
 
 ## Tool Chain — Run in This Order
 
@@ -345,6 +317,7 @@ Once the user picks a direction (or hybrid):
 - Lock in all values: hex codes, fonts, animation level
 - Verify contrast ratios for all locked text/background combinations against S07 requirements
 - Invoke the matching Taste Skill variant based on chosen direction
+- Invoke `emil-design-eng` — apply component-level polish: spring physics, hover state craft, transition timing, and interaction causality. *(If not installed, apply fallback rules manually.)*
 - Run `ecc:make-interfaces-feel-better` — apply micro-interaction improvements
 
 ### 4. Impeccable + sketching
@@ -408,13 +381,15 @@ Run `ecc:ui-demo` to validate. *(Skip if ECC not installed.)*
 
 ### 7. Animation spec, accessibility verification, and compile
 
+Install framer-motion before running motion skills: `npm i framer-motion`
+
 Run `ecc:motion-foundations` → `ecc:motion-patterns` to establish animation tokens and patterns.
 
 If the product has **complex animation requirements** (drag-and-drop, gesture-driven UI, SVG path animations, imperative sequences, sortable lists): run `ecc:motion-advanced` after `motion-patterns`. Signals that trigger this: S03 features include drag-to-reorder, swipe gestures, canvas/SVG interactions, or animated loaders. *(Requires motion-foundations to have run first. Skip if animation scope is simple.)*
 
 Run `ecc:motion-ui` to produce the final named animation requirements list. Every entry must include a `prefers-reduced-motion` fallback — required per S07. *(Skip full motion chain if ECC not installed — name each animation manually.)*
 
-Run `ecc:a11y-architect` — verify all colour choices meet S07 contrast ratios, all interactive components have focus states, all animations have reduced-motion fallbacks, RTL layout uses logical CSS properties if required. *(Skip if ECC not installed — verify manually against S07 specs.)*
+Run `ecc:accessibility` — verify all colour choices meet S07 contrast ratios, all interactive components have focus states, all animations have reduced-motion fallbacks, RTL layout uses logical CSS properties if required. *(Skip if ECC not installed — verify manually against S07 specs.)*
 
 **`impeccable` final pass — run in sequence:**
 ```
@@ -442,11 +417,11 @@ Invoke `superpowers:verification-before-completion`. Check each item — do not 
 
 If any item fails: surface the gap to the user and resolve before writing.
 
-Write `docs/blueprint/08-ux-interface.md` with all of the above.
+Write `docs/architect/08-ux-interface.md` with all of the above.
 
 ### Spec output (write after verification gate passes)
 
-Write to `docs/blueprint/spec/08-ux-interface.md`:
+Write to `docs/architect/spec/08-ux-interface.md`:
 
 ```
 # Spec: S08 — UX, Interface Design & Branding
