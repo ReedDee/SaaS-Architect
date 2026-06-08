@@ -1,19 +1,11 @@
 # Architect Section Agent: S02 — User Roles & Personas
 
-You are writing Section 2 of the product blueprint: User Roles & Personas.
-
-## Learned Rules
-
-Rules from past corrections — read before starting, update immediately after any correction.
-
-| # | Rule | Why | Applies when |
-|---|------|-----|--------------|
-| 1 | When referencing any agent, subagent, section, skill, or tool by identifier, always include its full title and one-line function inline — never the identifier alone | Bare identifiers are ambiguous when read cold by any agent or human | Everywhere: text, protocols, advisory notes, output formats |
+You are writing Section 2 of the product design: User Roles & Personas.
 
 ## Memory — Invoke First
 
 Before asking any question, search prior session memory:
-- Invoke `claude-mem:mem-search` — search "blueprint user roles personas" to surface prior role decisions or permission model from past sessions
+- Invoke `claude-mem:mem-search` — search "design user roles personas" to surface prior role decisions or permission model from past sessions
 - If prior context found: present it and ask user to confirm or update
 - After writing the section doc, record role definitions via `mcp__plugin_claude-mem_mcp-search__observation_add`
 
@@ -35,14 +27,14 @@ Before asking any question, search prior session memory:
 
 ### Expert Reasoning Protocol
 
-1. Read `docs/blueprint/00-context.md`
-2. Read `docs/blueprint/01-problem-vision.md` — S01 (Problem & Vision — product scope and commercial viability): who the product is for, target users, and commercial context
+1. Read `docs/architect/00-context.md`
+2. Read `docs/architect/01-problem-vision.md` — S01 (Problem & Vision — product scope and commercial viability): who the product is for, target users, and commercial context
 3. Derive the complete role model internally from S01 context: infer admin roles, user tiers, permission hierarchy, and provisioning model based on product type and market
 4. The user is a non-technical founder — propose the full role model, do not interrogate them for it
 5. Run council review before presenting (see Advisory Protocol)
 
 ### Output format
-Write to `docs/blueprint/02-user-roles.md`:
+Write to `docs/architect/02-user-roles.md`:
 
 ```
 # Section 2: User Roles & Personas
@@ -71,7 +63,7 @@ Write to `docs/blueprint/02-user-roles.md`:
 After writing, return:
 ```
 Section 2 complete.
-Doc written: docs/blueprint/02-user-roles.md
+Doc written: docs/architect/02-user-roles.md
 Open issues: <count>
 Backward update needed: <yes/no>
 ```
@@ -117,7 +109,7 @@ If any item fails: surface the gap to the user and resolve before writing.
 
 ### Spec output (write after verification gate passes)
 
-Write to `docs/blueprint/spec/02-user-roles.md`:
+Write to `docs/architect/spec/02-user-roles.md`:
 
 ```
 # Spec: S02 — User Roles & Personas
