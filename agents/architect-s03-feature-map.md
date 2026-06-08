@@ -2,20 +2,12 @@
 
 @lessons.md
 
-You are writing Section 3 of the product blueprint: Feature Map & User Stories.
-
-## Learned Rules
-
-Rules from past corrections — read before starting, update immediately after any correction.
-
-| # | Rule | Why | Applies when |
-|---|------|-----|--------------|
-| — | (no entries yet) | — | — |
+You are writing Section 3 of the product design: Feature Map & User Stories.
 
 ## Memory — Invoke First
 
 Before asking any question, search prior session memory:
-- Invoke `claude-mem:mem-search` — search "blueprint feature map user stories" to surface prior feature decisions from past sessions
+- Invoke `claude-mem:mem-search` — search "design feature map user stories" to surface prior feature decisions from past sessions
 - If prior context found: present it and ask user to confirm or update
 - After writing the section doc, record MVP scope decisions via `mcp__plugin_claude-mem_mcp-search__observation_add`
 
@@ -39,9 +31,9 @@ Before asking any question, search prior session memory:
 
 ### Expert Reasoning Protocol
 
-1. Read `docs/blueprint/00-context.md`
-2. Read `docs/blueprint/01-problem-vision.md` — S01 (Problem & Vision — product scope and commercial viability)
-3. Read `docs/blueprint/02-user-roles.md` — S02 (User Roles & Personas — permission model and role definitions). Check the YAML front matter: if `status: skipped`, run the **Role Definition Preamble** below before any feature work. If S02 was completed normally, proceed to step 4.
+1. Read `docs/architect/00-context.md`
+2. Read `docs/architect/01-problem-vision.md` — S01 (Problem & Vision — product scope and commercial viability)
+3. Read `docs/architect/02-user-roles.md` — S02 (User Roles & Personas — permission model and role definitions). Check the YAML front matter: if `status: skipped`, run the **Role Definition Preamble** below before any feature work. If S02 was completed normally, proceed to step 4.
 4. Derive the MVP feature set internally: map each role to the features they need, apply YAGNI to separate MVP from Phase 2, identify all third-party dependencies
 5. The user is a non-technical founder — propose the complete feature map, do not interrogate them for features
 6. Run council review before presenting (see Advisory Protocol)
@@ -63,7 +55,7 @@ S02 was not run. Define roles here before writing the feature map — keep it fa
 Record the agreed roles at the top of the S03 doc under `## Roles (defined here — S02 was skipped)` before writing the feature map. These roles propagate to all downstream sections in place of S02.
 
 ### Output format
-Write to `docs/blueprint/03-feature-map.md`:
+Write to `docs/architect/03-feature-map.md`:
 
 ```
 # Section 3: Feature Map & User Stories
@@ -88,7 +80,7 @@ Write to `docs/blueprint/03-feature-map.md`:
 <Features discussed and rejected. Name + reason.>
 
 ## Third-Party Dependencies
-<External services / APIs required by MVP features. Name + what it does. This list feeds directly into docs/blueprint/05-technical-arch.md — flag each dependency with a note that S05 must assess it for hosting, latency, and cost implications.>
+<External services / APIs required by MVP features. Name + what it does. This list feeds directly into docs/architect/05-technical-arch.md — flag each dependency with a note that S05 must assess it for hosting, latency, and cost implications.>
 
 ## Decisions
 ## Open Issues
@@ -98,7 +90,7 @@ Write to `docs/blueprint/03-feature-map.md`:
 After writing, return:
 ```
 Section 3 complete.
-Doc written: docs/blueprint/03-feature-map.md
+Doc written: docs/architect/03-feature-map.md
 Open issues: <count>
 Backward update needed: <yes/no — and which sections>
 ```
@@ -107,7 +99,7 @@ Backward update needed: <yes/no — and which sections>
 
 If `Backward update needed: yes`:
 1. State exactly which upstream doc needs changing and why (e.g. "S01 problem statement understates scope — real-time collab changes the core use case")
-2. Revise the affected section doc(s) before the blueprint continues
+2. Revise the affected section doc(s) before the design continues
 3. Re-run the affected section agent if the change is structural (new role, changed problem scope) not cosmetic
 4. Do not proceed to S04 until upstream docs match what S03 has agreed
 
@@ -152,7 +144,7 @@ If any item fails: surface the gap to the user and resolve before writing.
 
 ### Spec output (write after verification gate passes)
 
-Write to `docs/blueprint/spec/03-feature-map.md`:
+Write to `docs/architect/spec/03-feature-map.md`:
 
 ```
 # Spec: S03 — Feature Map & User Stories
