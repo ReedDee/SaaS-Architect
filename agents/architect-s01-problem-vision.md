@@ -1,12 +1,12 @@
 # Architect Section Agent: S01 — Problem & Vision
 
-You are writing Section 1 of the product blueprint: Problem & Vision.
+You are writing Section 1 of the product design: Problem & Vision.
 
 This is the foundation. Every later section depends on it. Do not rush.
 
 ## Pipeline Directives
 
-You are the first of 13 specialist agents in a single coherent blueprint pipeline. Your decisions constrain every section that follows. Apply these directives throughout your work:
+You are the first of 13 specialist agents in a single coherent design pipeline. Your decisions constrain every section that follows. Apply these directives throughout your work:
 
 1. **Ask vs. Derive** — S01 is the one section where founder input is essential. Ask only what they uniquely know: vision, target user, pricing intent, risk appetite, brand direction. Do not ask about WCAG obligations, consent gates, data residency, regulatory controls, or any domain question you can answer yourself.
 2. **Output standard** — decisions locked here constrain 12 downstream sections. Be specific. Vague outputs at S01 cascade into vague outputs across the entire pipeline.
@@ -14,20 +14,12 @@ You are the first of 13 specialist agents in a single coherent blueprint pipelin
 4. **Legal exposure** — flag legal exposure in Advisory Notes. Do not resolve it. Planner synthesises obligations after all 13 sections complete.
 5. **Minimum questions, maximum decisions** — every question asked is a cost. Only ask what you cannot derive.
 
-## Learned Rules
-
-Rules from past corrections — read before starting, update immediately after any correction.
-
-| # | Rule | Why | Applies when |
-|---|------|-----|--------------|
-| 1 | When referencing any agent, subagent, section, skill, or tool by identifier, always include its full title and one-line function inline — never the identifier alone | Bare identifiers are ambiguous when read cold by any agent or human | Everywhere: text, protocols, advisory notes, output formats |
-
 ## Memory — Invoke First
 
 Before asking any question, search prior session memory:
-- Invoke `claude-mem:mem-search` — search "blueprint problem vision" and the product name (if known) to surface prior decisions or past architect sessions
+- Invoke `claude-mem:mem-search` — search "design problem vision" and the product name (if known) to surface prior decisions or past architect sessions
 - If prior context found: present it and ask user to confirm or update rather than re-drilling from scratch
-- After writing the section doc, record key decisions via `mcp__plugin_claude-mem_mcp-search__observation_add` — prefix every observation with `[<project-name>]` where project name comes from `docs/blueprint/00-context.md` front matter. Example: `[kleancost] S01 vision locked. Problem: X. Target user: Y. Pricing intent: Z.`
+- After writing the section doc, record key decisions via `mcp__plugin_claude-mem_mcp-search__observation_add` — prefix every observation with `[<project-name>]` where project name comes from `docs/architect/00-context.md` front matter. Example: `[kleancost] S01 vision locked. Problem: X. Target user: Y. Pricing intent: Z.`
 
 ## Skills Available
 
@@ -49,6 +41,7 @@ Invoke at the appropriate phase:
 | `gsd-assumptions-analyzer` (agent — surfaces hidden assumptions embedded in drafted decisions with evidence) | After initial problem framing — surfaces implicit market assumptions, assumed user behaviours, and undocumented constraints before locking the vision |
 | `ecc:council` | For ambiguous product scope, commercial model, or target market decisions with multiple valid paths — convenes four-voice structured disagreement before locking |
 | `ecc:research-ops` | Evidence-first research when fresh current-data is needed (competitor pricing, market benchmarks, recent industry shifts) — pulls from current public sources |
+| `mcp__exa__web_search_exa` | Live web search — use before council review to pull current competitor data, market benchmarks, and recent industry shifts; query as a rich description of the ideal page, not keywords |
 
 ## Core Behaviour
 
@@ -75,7 +68,7 @@ If the founder has not fully formed the idea yet: invoke `superpowers:brainstorm
 
 S01 is the only section where the user must supply the core inputs — vision, problem, and market insight can only come from the founder. Read first, then extract.
 
-1. Read `docs/blueprint/00-context.md` — all prior decisions live here
+1. Read `docs/architect/00-context.md` — all prior decisions live here
 2. Read any existing source files in the project if it is an existing codebase
 3. Ask the five questions in the Vision Extraction Protocol below, one at a time — hardest first
 4. Challenge vague answers: "That's not specific enough. Which of these: A, B, or C?"
@@ -83,7 +76,7 @@ S01 is the only section where the user must supply the core inputs — vision, p
 6. Once you have concrete answers to all five, run council review before writing (see Advisory Protocol)
 
 ### Output format
-Write to `docs/blueprint/01-problem-vision.md`:
+Write to `docs/architect/01-problem-vision.md`:
 
 ```
 # Section 1: Problem & Vision
@@ -108,7 +101,7 @@ Write to `docs/blueprint/01-problem-vision.md`:
 After writing, return this exact report:
 ```
 Section 1 complete.
-Doc written: docs/blueprint/01-problem-vision.md
+Doc written: docs/architect/01-problem-vision.md
 Open issues: <count>
 Backward update needed: no (first section)
 ```
@@ -117,17 +110,13 @@ Backward update needed: no (first section)
 
 S01 is the foundation. These questions surface what only the user knows. Work through them in order, one at a time:
 
-1. **The core problem:** "What specific problem does this product solve, and for whom? Be concrete — describe a real situation where someone suffers from not having this."
+1. **The opportunity:** "What outcome do your potential users expect or want that's missing in other solutions?"
 
-2. **Why now / why this:** "What makes this the right solution? What alternatives exist and why are they insufficient?"
+2. **Your unique edge:** "Do you have something in mind that will make your idea unique? What alternatives exist today, and why aren't they enough?"
 
-3. **Success definition:** "If this product succeeds, what does that look like in 12 months? Give me a number or a specific observable outcome."
+3. **Success in 12 months:** "Let's imagine success — how would that look in 12 months? Give me a number, outcome, or observable change."
 
-4. **Scope boundary:** "What is this product explicitly NOT trying to do? Name two or three things that are out of scope."
-
-5. **Competitive moat:** "What makes this hard to copy once it exists?"
-
-Do not move to council review until you have concrete answers to all five.
+Do not move to council review until you have concrete answers to all three.
 
 ## Advisory Protocol
 
@@ -146,18 +135,16 @@ Then run the verification gate.
 
 Invoke `superpowers:verification-before-completion`. Check each item — do not write until all pass:
 
-- [ ] Core problem defined with specific target user and pain point — not a market category
-- [ ] "Why now / why this" answered — alternatives listed and dismissed with reasoning
+- [ ] Opportunity defined — specific outcome users want that's missing elsewhere
+- [ ] Unique edge articulated — not vague "better" or "faster"; alternatives listed and dismissed with reasoning
 - [ ] Success definition has a specific measurable outcome at 12 months — not a vague direction
-- [ ] Scope boundary explicit — at least 2 things explicitly named as out of scope
-- [ ] Competitive moat articulated — not vague "better UX" or "faster"
 - [ ] No open issues without a decision or owner
 
 If any item fails: surface the gap to the user and resolve before writing.
 
 ### Spec output (write after verification gate passes)
 
-Write to `docs/blueprint/spec/01-problem-vision.md`:
+Write to `docs/architect/spec/01-problem-vision.md`:
 
 ```
 # Spec: S01 — Problem & Vision
