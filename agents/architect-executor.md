@@ -66,15 +66,15 @@ These ECC skills and agents are available if the ECC plugin is installed (`/plug
 | API design and backend patterns | `ecc:backend-patterns`, `ecc:api-design` skills |
 | Deployment, CI/CD, Docker | `ecc:deployment-patterns`, `ecc:docker-patterns` skills |
 | E2E testing | `ecc:e2e-testing` skill |
-| TDD implementation | `ecc:tdd-workflow` skill + `ecc:tdd-workflow` agent |
-| Library/framework docs for any stack technology | `ecc:documentation-lookup` skill — fetch current SDK and API docs when dispatching implementer subagents to prevent outdated syntax |
+| TDD implementation | `architect-tdd-workflow` skill (vendored, always available) + `ecc:tdd-workflow` agent (optional, if ECC installed) |
+| Library/framework docs for any stack technology | **Primary (always available):** `mcp__plugin_context7_context7__resolve-library-id` then `mcp__plugin_context7_context7__query-docs` — fetch current SDK/API docs when dispatching implementer subagents to prevent outdated syntax. *Optional (ECC only):* `ecc:documentation-lookup` skill as alternative. |
 | Code quality review | `ecc:coding-standards` — baseline naming, readability, and immutability conventions for cross-project code quality review |
 | Error handling in implementation | `ecc:error-handling` — typed errors, retries, circuit breakers, and user-facing error messages across TypeScript, Python, and Go |
-| Adversarial quality gate before shipping a feature | `ecc:santa-method` — two independent review agents must both pass; use before marking any feature done |
+| Adversarial quality gate before shipping a feature | `architect-santa-method` (vendored) — two independent review agents must both pass; use before marking any feature done |
 | Plan needs agent chain decomposition | `ecc:plan-orchestrate` — decomposes plan into step-by-step ECC agent chain prompts ready to dispatch |
-| Pre-action investigation gate | `ecc:gateguard` — blocks Edit/Write/Bash until concrete investigation is complete; measurably improves output quality |
-| Production system or destructive operations | `ecc:safety-guard` — prevents destructive operations when working on production systems or running agents autonomously |
-| Post-task session-wide verification | `ecc:verification-loop` — comprehensive iterative verification across all tasks before sign-off |
+| Pre-action investigation gate | `architect-gateguard` (vendored) — blocks Edit/Write/Bash until concrete investigation is complete; measurably improves output quality |
+| Production system or destructive operations | `architect-safety-guard` (vendored) — prevents destructive operations when working on production systems or running agents autonomously |
+| Post-task session-wide verification | `architect-verification-loop` (vendored) — comprehensive iterative verification across all tasks before sign-off |
 | Product has AI agent components in implementation | `ecc:agentic-engineering` — eval-first execution, decomposition, and cost-aware model routing for AI agent tasks |
 | AI agents generating large share of implementation output | `ecc:ai-first-engineering` — AI-first engineering operating model for team workflow and quality gates |
 | Product has AI agent components — audit before shipping | `ecc:agent-architecture-audit` — full-stack diagnostic for agent/LLM apps; audits 12-layer stack for wrapper regression, memory pollution, tool failures; severity-ranked findings |
@@ -87,17 +87,17 @@ These ECC skills and agents are available if the ECC plugin is installed (`/plug
 
 | Situation | GSD resource |
 |-----------|-------------|
-| Task `BLOCKED` — code bug | `gsd-debug` skill → `gsd-debug-session-manager` agent (multi-cycle debug loop) → `gsd-debugger` agent (scientific method fix; invoke `superpowers:systematic-debugging`) |
-| Subagent looping or drifting | `ecc:agent-introspection-debugging` (agent self-debugging — capture failure, diagnose, recover) |
+| Task `BLOCKED` — code bug | `architect-debugger` agent (vendored-native, always available — scientific-method root-cause isolation, sessions in docs/architect/.debug/). If GSD is installed, the `gsd-debug` skill → `gsd-debugger` agent multi-cycle loop is an optional richer alternative. |
+| Subagent looping or drifting | `architect-agent-introspection-debugging` (vendored, always available) — capture failure, diagnose, recover. **Invoke this from Step 2 `BLOCKED` handling when a re-dispatch fails to make progress, before escalating to the founder.** |
 | All tasks done — verify security | `gsd-secure-phase` skill → `gsd-security-auditor` agent (verifies S11 threat mitigations; produces SECURITY.md) |
 | All tasks done — validate features | `gsd-verify-work` skill (UAT against S03 acceptance criteria) |
 | Coverage gaps | `gsd-add-tests` skill (generate tests from S13 acceptance conditions) |
 | Docs out of sync | `gsd-docs-update` skill |
 | UI tasks done — audit quality | `gsd-ui-review` skill → `gsd-ui-auditor` agent (6-pillar visual audit; produces UI-REVIEW.md) |
 | Phase A — understand codebase | `gsd-codebase-mapper` agent + `gsd-pattern-mapper` agent + `gsd-intel-updater` agent |
-| Plan quality gate | `gsd-plan-checker` agent (goal-backward quality analysis) |
+| Plan quality gate | `architect-plan-checker` agent (vendored-native, always available — goal-backward plan quality analysis vs the 13 design docs) |
 | Code review | `gsd-code-reviewer` agent (produces REVIEW.md) + `gsd-code-fixer` agent (applies fixes atomically) |
-| Phase C — verify goals before ship | `gsd-verifier` agent (goal-backward verification; produces VERIFICATION.md) |
+| Phase C — verify goals before ship | `architect-verifier` agent (vendored-native, always available — goal-backward verification against design + live build; produces docs/architect/<product>-VERIFICATION.md) |
 | AI/LLM features — iterative loop | `gsd-executor` agent (GAN harness; implements spec, reads evaluator feedback, iterates) |
 | AI/LLM features — evaluation gap | `gsd-eval-planner` agent + `gsd-eval-auditor` agent |
 | AI/LLM features — full AI phase | `gsd-ai-integration-phase` skill → `gsd-ai-researcher` agent + `gsd-eval-planner` agent + `gsd-eval-auditor` agent |
@@ -138,6 +138,20 @@ Check whether `docs/architect/.executor-checkpoint.md` exists.
 
 - If the file does not exist: proceed from task 1.
 
+### Dependency security audit (mandatory before any build work)
+
+Before reading any spec or writing any code, audit all dependencies in the project:
+
+1. **Python** — run `pip-audit` on the installed venv. Surface all HIGH/CRITICAL CVEs. Block build if any unpatched HIGH/CRITICAL found.
+2. **JavaScript/Node** — run `npm audit --audit-level=high`. Block build on HIGH/CRITICAL.
+3. **Freshness** — for every package pinned in the plan, verify latest stable version via `pip index versions <pkg>` (Python) or `npm info <pkg> version` (JS), or Exa web search. Never trust training data for version numbers.
+4. **Maintenance health** — reject any package with no commits in 12+ months.
+5. **Block rule** — do not begin Phase B if any package in the build plan carries an unpatched HIGH/CRITICAL CVE. Document CVE ID, exposure scope, and mitigation. Get user sign-off before proceeding.
+
+Write audit findings to `docs/architect/.security-audit.md` before proceeding.
+
+---
+
 Read the executor prompt first — it is your primary brief and contains key constraints and definition of done.
 
 Read the master spec in full — this is the authoritative product reference for all spec compliance reviews.
@@ -167,6 +181,7 @@ Provide the subagent with:
 - `DONE_WITH_CONCERNS`: read concerns. If about correctness, resolve before review. If observational, proceed.
 - `NEEDS_CONTEXT`: provide the missing context and re-dispatch
 - `BLOCKED`: assess root cause. Context problem → re-dispatch with more context. Task too large → split it. Plan wrong → escalate to user.
+  - If a re-dispatch still returns `BLOCKED` (no forward progress, or the subagent is looping/drifting), invoke `architect-agent-introspection-debugging` (vendored — runs the 4-phase capture → diagnose → contained-recovery → report loop) BEFORE escalating to the founder. Escalate only if introspection-led recovery also fails.
 
 **Step 3 — Spec compliance review**
 

@@ -26,7 +26,7 @@ Before asking any question, search prior session memory:
 | `superpowers:verification-before-completion` | Run completeness gate before writing section docs |
 | `lesson-capture` | After any correction or validated non-obvious approach |
 | `ecc:seo` | Apply technical SEO patterns and implementation requirements affecting the build |
-| `ecc:market-research` | Research market and channel conventions before drafting the GTM strategy |
+| `ecc:market-research` | *Optional (ECC only)* — market/channel-convention framework layered on exa data (exa is primary, see below) |
 | `ecc:content-engine` | Design a content marketing strategy and editorial calendar for organic acquisition |
 | `ecc:brand-voice` | Establish tone and messaging framework before writing the GTM strategy doc |
 | `ecc:lead-intelligence` | Product is B2B — research the ICP and build prospect intelligence |
@@ -35,7 +35,7 @@ Before asking any question, search prior session memory:
 | `gsd-advisor-researcher` (agent — researches a gray-area decision and returns a structured comparison table with rationale) | When acquisition channel mix or budget allocation is undecided |
 | `gsd-spike` (skill — deep research on a specific technical question that must be answered before a decision can be locked) | When a technical SEO or GTM question blocks a specific strategy decision |
 | `gsd-assumptions-analyzer` (agent — surfaces hidden assumptions embedded in drafted decisions with evidence) | After reading docs — surfaces implicit channel assumptions and undocumented conversion event dependencies |
-| `ecc:research-ops` | Evidence-first research on keyword competition, channel benchmarks, or GTM tactics |
+| `ecc:research-ops` | *Optional (ECC only)* — evidence-first research framework layered on exa results (exa primary, see below) |
 | `mcp__exa__web_search_exa` | Live web search — use in Phase 1 to pull competitor keyword rankings, pricing pages, channel benchmarks, and recent GTM playbook examples; query as a rich description of the ideal page |
 
 ## Core Behaviour

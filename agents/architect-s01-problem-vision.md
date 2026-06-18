@@ -30,8 +30,9 @@ Invoke at the appropriate phase:
 | `superpowers:verification-before-completion` | Run completeness gate before writing the section doc |
 | `lesson-capture` | After any correction or validated non-obvious approach — capture it at the right storage tier |
 | `superpowers:brainstorming` | If user is unclear on problem definition or vision — run brainstorm first |
-| `ecc:deep-research` | Research competitive landscape and problem space before the advisory session |
-| `ecc:market-research` | Validate market size and customer segment assumptions |
+| `mcp__exa__web_search_exa` + `mcp__exa__web_fetch_exa` | **Primary research layer (always available, no plugin needed)** — competitive landscape, market size, segment data. Use these first. |
+| `ecc:deep-research` | *Optional (ECC only)* — deeper structured research pass on top of exa results |
+| `ecc:market-research` | *Optional (ECC only)* — market-size/segment validation framework on top of exa data |
 | `ecc:product-lens` | Stress-test the product concept against real user needs |
 | `claude-mem:knowledge-agent` | Retrieve domain knowledge relevant to this product category |
 | `graphify` | Map problem space, competitors, and user segments as a knowledge graph |

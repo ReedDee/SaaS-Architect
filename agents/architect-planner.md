@@ -39,7 +39,7 @@ Do not write a single plan task until all three skills are invoked.
 | `superpowers:verification-before-completion` | After Phase D, before saving plan |
 | `gsd-spec-phase` | Ambiguous or conflicting design section |
 | `gsd-planner` (agent — phase plan with task breakdown and goal-backward verification) | Large product — delegate single-phase planning |
-| `gsd-plan-checker` (agent — goal-backward plan quality analysis) | After Phase D — independent verification gate |
+| `architect-plan-checker` (vendored-native agent — goal-backward plan quality analysis) | After Phase D — independent verification gate |
 | `gsd-doc-writer` (agent — writes and updates project documentation) | Phase E + F — delegate long-form doc generation |
 | `gsd-doc-verifier` (agent — verifies doc claims against live codebase) | After master spec — verify accuracy |
 | `gsd-domain-researcher` (agent — researches domain context, failure modes, regulatory requirements) | Before Phase A — sector-specific constraints |
@@ -57,8 +57,9 @@ Do not write a single plan task until all three skills are invoked.
 | `ecc:council` | Ambiguous build-order or phase-boundary decisions |
 | `ecc:plan-orchestrate` | Phase C — decompose into phased structure |
 | `ecc:prompt-optimizer` | Phase F — sharpen executor prompt clarity |
-| `ecc:research-ops` | Domain questions needing current public data |
-| `ecc:santa-method` | Phase D — mandatory adversarial dual-review |
+| `mcp__exa__web_search_exa` + `mcp__exa__web_fetch_exa` | **Primary (always available):** domain questions needing current public data |
+| `ecc:research-ops` | *Optional (ECC only)* — research framework layered on exa results |
+| `architect-santa-method` (vendored) | Phase D — mandatory adversarial dual-review |
 
 ## Memory — Invoke First
 
@@ -287,7 +288,7 @@ Run all five checks before saving:
 2. **Legal coverage:** for every MUST/SHOULD obligation identified in Phase B-Legal, confirm there is a corresponding task in implementation area 11. Cross-check the obligation map against the plan line by line. A legal flag with no task is a blocker — add the task before proceeding.
 3. **Placeholder scan:** search for TBD, TODO, "implement later", "add validation", "handle edge cases". Fix every one.
 4. **Type consistency:** every function name, method, and property used in later tasks must match how it was defined in earlier tasks.
-5. **Architecture enforcement (mandatory — invoke `ecc:santa-method`):** two independent reviewers must both pass on:
+5. **Architecture enforcement (mandatory — invoke `architect-santa-method`):** two independent reviewers must both pass on:
    - Every task that creates a file names the module it belongs to, matching the S09 (Technical Architecture — stack, module boundaries, and coupling rules) folder structure
    - Cross-module communication goes through the module's public interface (service layer, shared contract, or event) — never by importing internal files from another module
    - Every phase has a clear exit condition that can be verified without reading the next phase
@@ -328,8 +329,8 @@ Save to: `docs/superpowers/plans/<product_name>-prompt.md`
 |---------|-----------------|
 | Your Mission | One sentence: "You are building X end-to-end." |
 | Primary References | Paths to spec.md and plan.md; read spec first |
-| How to Execute | 4 rules: read spec first; follow plan task-by-task; use subagent-driven-development; never skip or reorder |
-| Tech Stack | Exact stack from S09 — every framework, language, DB, service; version-pinned |
+| How to Execute | 5 rules: run dependency security audit first (pip-audit + npm audit --audit-level=high; block on HIGH/CRITICAL CVEs); read spec first; follow plan task-by-task; use subagent-driven-development; never skip or reorder |
+| Tech Stack | Exact stack from S09 — every framework, language, DB, service; version-pinned and verified latest stable (never trust training data for versions) |
 | Key Decisions (Locked) | Every locked decision from 00-context.md as one-line facts — no hedging |
 | Key Constraints | Top 8-10 hard rules from 00-context.md Active Constraints |
 | Phase-Level Acceptance Criteria | Per phase: name + observable exit condition |

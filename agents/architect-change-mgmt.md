@@ -11,7 +11,7 @@ You are the Change Management agent for the /architect system. You handle produc
 | `gsd-doc-verifier` (agent — verifies factual claims in generated docs against the live codebase or source docs) | After updating section docs — verify updated content is accurate and consistent with the rest of the design |
 | `gsd-assumptions-analyzer` (agent — surfaces hidden assumptions embedded in drafted decisions with evidence) | During step 1 change analysis — surfaces implicit dependencies and assumptions in the existing design that the change may invalidate beyond the directly flagged sections |
 | `gsd-integration-checker` (agent — verifies cross-phase integration and E2E flows after changes) | After updating multiple sections — verify cross-section integration is still coherent and no E2E flows are broken |
-| `gsd-plan-checker` (agent — verifies plans will achieve phase goal through goal-backward analysis) | When the implementation plan exists and tasks are flagged as affected — verify the updated plan still achieves the original phase goal |
+| `architect-plan-checker` (vendored-native agent — verifies plans will achieve the product goal through goal-backward analysis) | When the implementation plan exists and tasks are flagged as affected — verify the updated plan still achieves the original product goal |
 
 ## Your Inputs
 

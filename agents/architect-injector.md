@@ -53,10 +53,18 @@ WHEN all sections complete:
 3. Load ONLY that section's .md (not all 13)
 4. Pass file + brief + prior section summaries as context
 
+**Section ordering** (handles non-integer sections):
+```
+section_order = [1, 2, 2.1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+next_section = section_order[section_order.index(last_completed) + 1]
+```
+
+S02.1 is mandatory — never skip it regardless of mode.
+
 **Lite mode filtering:**
 ```
 IF mode == "lite":
-  next_section IN [1, 2, 3, 4, 5, 9]
+  next_section IN [1, 2, 2.1, 3, 4, 5, 9]
   IF next_section NOT IN lite_sections:
     Skip section → log in 00-state.md → continue
 ```
@@ -102,6 +110,10 @@ current_section = 00-state.md.last_completed
 IF current_section == 13:
   Dispatch architect-planner.md
   RETURN
+
+# Section 2.1 guard: if last_completed == 2 and 2.1 not in state, run 2.1 next
+IF current_section == 2 AND "2.1" NOT IN completed_sections:
+  next_section = 2.1
 ```
 
 ## Step 1b — Dependency Audit (run once per session)
@@ -111,7 +123,7 @@ Before the pipeline loop starts, verify all skill references in the upcoming sec
 ```bash
 # Check for known ghost patterns
 grep -rn \
-  "ecc:a11y-architect\|ecc:tdd-guide\|ecc:architect\b\|ecc:database-reviewer\|ecc:e2e-runner\|ecc:security-reviewer\|legal-advisor\|gsd-ui-ux-pro-max" \
+  "ecc:a11y-architect\|ecc:tdd-guide\|ecc:architect\b\|ecc:database-reviewer\|ecc:e2e-runner\|legal-advisor\|gsd-ui-ux-pro-max" \
   ~/.claude/agents/architect-s*.md 2>/dev/null
 ```
 
@@ -186,6 +198,48 @@ IF agent output is empty OR contains error OR wrote no file:
     Continue to next section
 ```
 
+### 5a.5 — Completion-verification gate (REQUIRED)
+
+A written file is NOT proof of a complete section. Before marking any section
+complete, verify its content covers what the section was required to produce.
+Borrowed from the `verification-before-completion` pattern: evidence before claims.
+
+**Iron rule: no section is "complete" until this gate passes. File existence is not evidence.**
+
+```
+required = registry.sections[next_section].required_outputs
+doc = read(docs/architect/<NN>-<slug>.md)
+
+FOR each item in required:
+  Confirm the doc contains real, specific content addressing it.
+  An item FAILS if it is: absent, a placeholder ("consider X", "TBD",
+  "to be decided", "[…]"), or a vague restatement of the prompt with no decision.
+
+coverage = (items addressed) / (total required)
+
+IF coverage < 1.0 (any required output missing or hollow):
+  Build a HOLLOW REPORT listing each missing/placeholder item.
+  Retry ONCE — re-invoke the section agent with:
+    "Section incomplete. These required outputs are missing or are placeholders:
+     <list>. Produce concrete, buildable content for each. No 'consider X'."
+  Re-run this gate on the new output.
+
+  IF still < 1.0 after retry:
+    PAUSE. Surface to founder:
+      "S<N> is incomplete after retry. Missing: <list>.
+       Options: (a) I draft the gaps now, (b) you provide input, (c) accept as-is and log debt."
+    Log each unmet item in 00-issues.md tagged [INCOMPLETE-SECTION].
+    Do NOT silently mark complete. Only proceed on explicit founder choice.
+
+IF coverage == 1.0:
+  Record gate result for Tracker: `gate: pass, coverage: <n>/<n>`.
+  Proceed to 5b.
+```
+
+This gate enforces Global Lesson #1 (never confirm completeness by structure alone)
+and Brief Writer Directive #3 (a developer must be able to build from the doc).
+The gate reads only the one section doc just written — no extra context cost beyond ~1 file.
+
 ### 5b — Check for FOUNDER_QUESTION blocks
 ```
 questions = extract_founder_questions(section_output)
@@ -210,10 +264,14 @@ IF any conflict is CRITICAL:
 ### 5d — Update state
 ```
 Invoke architect-tracker in background:
-  - Mark section as complete
+  - Pass the 5a.5 gate result (gate: pass | accepted-with-debt, coverage: <n>/<n>)
+  - Mark section as complete ONLY IF gate passed (or founder accepted debt)
   - Index section content for corpus
   - Log key decisions in 00-context.md
 ```
+
+Never dispatch Tracker with "complete" for a section that failed the 5a.5 gate
+and was not explicitly accepted by the founder.
 
 ## Step 6 — Loop to Next
 

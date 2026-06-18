@@ -73,7 +73,7 @@ Example: "S06 (Accessibility & Compliance — defines inclusive UX requirements 
 
 ## 9. ECC Plugin Dependency
 
-Several sections invoke ECC skills (ecc:architecture-decision-records, ecc:frontend-patterns, ecc:backend-patterns, ecc:database-migrations, ecc:security-scan, ecc:tdd-workflow). These require the ECC plugin:
+TDD enforcement uses `architect-tdd-workflow` (vendored — always available, no ECC needed). Several other sections invoke optional ECC skills (ecc:architecture-decision-records, ecc:frontend-patterns, ecc:backend-patterns, ecc:database-migrations, ecc:security-scan). These require the ECC plugin:
 ```
 /plugin install ecc@ecc
 ```

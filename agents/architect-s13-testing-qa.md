@@ -15,8 +15,8 @@ Before asking any question, search prior session memory:
 
 | Skill | When | Phase |
 |-------|------|-------|
-| `ecc:tdd-workflow` (test-driven development methodology) | Test strategy defined; need TDD enforcement guardrails (write tests first, code second) | Core |
-| `ecc:tdd-workflow` (TDD patterns for new features) | Implementing feature; ensure test-first approach per TDD | Implementation |
+| `architect-tdd-workflow` (vendored — test-driven development methodology) | Test strategy defined; need TDD enforcement guardrails (write tests first, code second) | Core |
+| `architect-tdd-workflow` (vendored — TDD patterns for new features) | Implementing feature; ensure test-first approach per TDD | Implementation |
 | `ecc:e2e-testing` (E2E test authoring, browser automation) | Critical user paths identified; need Playwright/Cypress automation | Core |
 | `gsd-nyquist-auditor` (agent — verify test coverage meets specification) | All tests written; audit coverage vs spec targets | Completion |
 | `lesson-capture` (document non-obvious test pattern) | Test strategy or framework choice confirms a validated principle | Completion |
