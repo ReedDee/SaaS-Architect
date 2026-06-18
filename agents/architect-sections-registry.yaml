@@ -1,0 +1,223 @@
+---
+# Architect Sections Registry
+# Lightweight index for lazy-loading section agents
+# Updated: 2026-05-29
+
+sections:
+  s01:
+    number: 1
+    title: "Problem & Vision"
+    slug: "problem-vision"
+    file: "architect-s01-problem-vision.md"
+    estimated_tokens: 4200
+    required: true
+    lite_mode: true
+    description: "Lock problem statement, market analysis, target user, 12-month success metric"
+    required_outputs:
+      - "Explicit problem statement (one paragraph, no placeholders)"
+      - "Target user / primary persona named"
+      - "Market or competitive landscape with at least 2 named comparators"
+      - "12-month success metric stated as a number or measurable outcome"
+
+  s02:
+    number: 2
+    title: "User Roles & Personas"
+    slug: "user-roles"
+    file: "architect-s02-user-roles.md"
+    estimated_tokens: 2800
+    required: false
+    lite_mode: true
+    description: "Define user roles, permissions matrix, behavioral personas"
+    required_outputs:
+      - "Named list of user roles"
+      - "Permissions matrix (role x capability)"
+      - "At least one behavioral persona with goals and context"
+
+  s02_1:
+    number: 2.1
+    title: "Failure & Behaviour Analysis"
+    slug: "failure-analysis"
+    file: "architect-s02.1-failure-analyst.md"
+    estimated_tokens: 5200
+    required: true
+    lite_mode: true
+    description: "7-domain failure taxonomy, probabilistic risk register, behavioural guardrails — mandatory pre-implementation gate"
+    required_outputs:
+      - "Failure taxonomy covering the 7 domains"
+      - "Risk register with probability and impact per risk"
+      - "Behavioural guardrails stated as enforceable rules"
+
+  s03:
+    number: 3
+    title: "Feature Map & User Stories"
+    slug: "feature-map"
+    file: "architect-s03-feature-map.md"
+    estimated_tokens: 3100
+    required: false
+    lite_mode: true
+    description: "Feature list, user stories, MVP scope boundary, out-of-scope items"
+    required_outputs:
+      - "Feature list with each feature named"
+      - "User stories in standard format"
+      - "Explicit MVP scope boundary (in-scope vs out-of-scope lists)"
+
+  s04:
+    number: 4
+    title: "Monetisation & Stripe"
+    slug: "monetisation"
+    file: "architect-s04-monetisation.md"
+    estimated_tokens: 5600
+    required: false
+    lite_mode: true
+    description: "Pricing model, Stripe setup, billing flows, revenue forecast"
+    required_outputs:
+      - "Pricing model with concrete tiers or rates"
+      - "Stripe integration approach (products, prices, webhooks)"
+      - "Billing flows described (signup, upgrade, failure, cancel)"
+
+  s05:
+    number: 5
+    title: "SEO & GTM Strategy"
+    slug: "seo-gtm"
+    file: "architect-s05-seo-gtm.md"
+    estimated_tokens: 6500
+    required: false
+    lite_mode: true
+    description: "URL structure, meta strategy, keyword map, GTM launch plan"
+    required_outputs:
+      - "URL / route structure"
+      - "Keyword map with target terms"
+      - "GTM launch plan with channels and sequence"
+
+  s06:
+    number: 6
+    title: "Accessibility & i18n"
+    slug: "accessibility-i18n"
+    file: "architect-s06-accessibility-i18n.md"
+    estimated_tokens: 5600
+    required: false
+    lite_mode: false
+    description: "WCAG compliance level, i18n routing, locale strategy, RTL support"
+    required_outputs:
+      - "WCAG compliance level chosen (A / AA / AAA) with justification"
+      - "i18n routing and locale strategy"
+      - "RTL support decision stated"
+
+  s07:
+    number: 7
+    title: "Analytics & Tracking"
+    slug: "analytics"
+    file: "architect-s07-analytics.md"
+    estimated_tokens: 3400
+    required: false
+    lite_mode: false
+    description: "Event schema, consent gates, UTM naming convention, data retention"
+    required_outputs:
+      - "Event schema with named events and properties"
+      - "Consent gate strategy"
+      - "Data retention policy stated"
+
+  s08:
+    number: 8
+    title: "UX, Interface Design & Branding"
+    slug: "ux-interface"
+    file: "architect-s08-ux-interface.md"
+    estimated_tokens: 9200
+    required: false
+    lite_mode: false
+    description: "Wireframes, brand guidelines, component hierarchy, design system"
+    required_outputs:
+      - "Key screens / wireframes described"
+      - "Brand guidelines (tone, color, type direction)"
+      - "Component hierarchy or design-system primitives"
+
+  s09:
+    number: 9
+    title: "Technical Architecture"
+    slug: "technical-arch"
+    file: "architect-s09-technical-arch.md"
+    estimated_tokens: 4900
+    required: true
+    lite_mode: true
+    description: "Tech stack, module structure, API contracts, dependency decisions"
+    required_outputs:
+      - "Tech stack named (language, framework, key libraries)"
+      - "Module / directory structure"
+      - "API contracts or core interfaces defined"
+
+  s10:
+    number: 10
+    title: "Data Architecture"
+    slug: "data-arch"
+    file: "architect-s10-data-arch.md"
+    estimated_tokens: 3800
+    required: false
+    lite_mode: false
+    description: "Schema design, PII identification, migration strategy, backup plan"
+    required_outputs:
+      - "Schema design (tables/collections with key fields)"
+      - "PII fields identified"
+      - "Migration and backup strategy"
+
+  s11:
+    number: 11
+    title: "Security & Compliance"
+    slug: "security"
+    file: "architect-s11-security.md"
+    estimated_tokens: 4100
+    required: false
+    lite_mode: false
+    description: "Threat model, auth hardening, regulatory flags, compliance obligations"
+    required_outputs:
+      - "Threat model with named threats"
+      - "Auth and hardening measures"
+      - "Regulatory / compliance obligations flagged"
+
+  s12:
+    number: 12
+    title: "DevOps & Hosting"
+    slug: "devops-hosting"
+    file: "architect-s12-devops-hosting.md"
+    estimated_tokens: 4200
+    required: false
+    lite_mode: false
+    description: "CI/CD pipeline, hosting config, environment strategy, disaster recovery"
+    required_outputs:
+      - "CI/CD pipeline stages"
+      - "Hosting and environment strategy (dev/staging/prod)"
+      - "Disaster recovery / backup approach"
+
+  s13:
+    number: 13
+    title: "Testing & QA"
+    slug: "testing-qa"
+    file: "architect-s13-testing-qa.md"
+    estimated_tokens: 4000
+    required: false
+    lite_mode: false
+    description: "Test strategy, coverage targets, E2E flows, quality gates"
+    required_outputs:
+      - "Test strategy by layer (unit / integration / E2E)"
+      - "Coverage targets stated as numbers"
+      - "Critical E2E flows listed"
+      - "Quality gates defined"
+
+# Lite mode sections (7 core — 2.1 mandatory in all modes)
+lite_sections: [1, 2, 2.1, 3, 4, 5, 9]
+
+# Support agents (always loaded as needed, not pre-loaded)
+support_agents:
+  tracker: "architect-tracker.md"
+  init: "architect-init.md"
+  brief_writer: "architect-brief-writer.md"
+  change_mgmt: "architect-change-mgmt.md"
+  planner: "architect-planner.md"
+  executor: "architect-executor.md"
+  principles: "architect-principles.md"
+  operating_principles: "architect-operating-principles.md"
+
+# Context budget (tokens)
+budget:
+  session_limit: 150000
+  section_soft_max: 15000
+  support_agent_soft_max: 30000

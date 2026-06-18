@@ -45,6 +45,7 @@ A living rule set. Updated after every correction. Reviewed at every session sta
 | # | Rule | Why | Applies when |
 |---|------|-----|--------------|
 | 1 | When auditing architect agents for completeness, verify content correctness against current requirements — not just structural presence of headings. A file with all standard sections can still be wrong: a new section absent from a relevance map, stale sequential logic, or a missing protocol are invisible to a structural scan. Check what the content says, not just what sections exist | Declared all agents complete after a surface scan; gaps only found when content was checked against actual requirements | Any completeness audit of agent files, orchestrator logic, or relevance maps |
+| 2 | The orchestrator records a design section "complete" only after content-checking the written doc against that section's `required_outputs` list in the registry — never file-existence alone. Placeholders ("consider X", "TBD", vague restatements) fail the gate; retry once, then pause for the founder. The state writer (Tracker) refuses a bare "complete" with no gate result. | A written file is not proof of completion; a section full of placeholders was passing as done and poisoning the Planner downstream. Fixed by wiring the verification-before-completion pattern into Injector Step 5a.5. | Any orchestrator/pipeline step that marks a unit of work complete based on an agent's output |
 
 ## Ambiguity Handling
 > applies: all
@@ -64,6 +65,16 @@ A living rule set. Updated after every correction. Reviewed at every session sta
 
 ---
 
+## Memory Integration
+> applies: all
+
+| # | Rule | Why | Applies when |
+|---|------|-----|--------------|
+| 1 | When a tool or plugin is listed as a dependency in an agent system, verify the agents actually call it — grep for function invocations, not just the listing in README or requirements. Presence in docs is not integration. | claude-mem listed as required plugin; no agent called memory_search, smart_search, memory_add, or prime_corpus anywhere in the pipeline. ChatGPT caught it. | After building or reviewing any agent system that lists tool/plugin dependencies |
+| 2 | After completing any agent system build, audit all three memory layers — retrieval (memory_context, get_observations), semantic (smart_search), and indexed content (memory_add, prime_corpus, build_corpus) — and verify each is wired in at least one agent. A plugin in the requirements table means nothing if no agent calls it. | Full claude-mem integration was assumed from README listing; all three layers were absent from every agent in the pipeline. | Any time an agent system claims memory, search, or persistence capability |
+
+---
+
 ## Subagent Usage
 > applies: orchestrator, planner, executor, injector
 
@@ -73,3 +84,4 @@ A living rule set. Updated after every correction. Reviewed at every session sta
 | 2 | Offload research, exploration, and parallel analysis to subagents | These tasks consume context without producing decisions — keep them out of the main thread | Before grilling, before writing, before reviewing |
 | 3 | For complex problems, throw more compute at it via subagents — spawn more, not fewer | Underuse of subagents forces the main agent to degrade; compute is cheaper than context | Any multi-step analysis, contradiction checking, or cross-section validation |
 | 4 | One task per subagent for focused execution — never bundle unrelated work into one dispatch | Mixed-task subagents produce mixed-quality output; isolation produces precision | Every subagent dispatch without exception |
+| 5 | When borrowing techniques from other skills into an agent pipeline, the highest-leverage borrow is usually a verification/enforcement gate at an orchestrator chokepoint — not feature breadth. Do one enforcement gate well before adding many shallow capabilities. | Reviewing skills to copy into the architect orchestration; the single completion-verification gate outvalued three feature-style borrows combined. | Any time deciding which patterns to lift from other skills into an orchestrator or pipeline |

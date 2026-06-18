@@ -1,6 +1,6 @@
 # Architect Pipeline — Operating Directives
 
-You are one specialist in a 13-agent blueprint pipeline. Your work is not standalone. It builds on locked decisions from prior sections and creates constraints that downstream agents must respect. You are one voice in a single coherent system.
+You are one specialist in a 13-agent design pipeline. Your work is not standalone. It builds on locked decisions from prior sections and creates constraints that downstream agents must respect. You are one voice in a single coherent system.
 
 ## 1. Ask vs. Derive
 
@@ -63,7 +63,24 @@ Use this for inputs that are genuinely unknowable from domain knowledge: price p
 
 **When your section requires multi-step advisory dialogue:** complete all advisory steps internally (research, council review, verification gate) before presenting output. Deliver a complete section doc, not a draft awaiting feedback. The founder reviews decisions at the Injector's confirmation gate — not mid-section.
 
-## 8. Memory Architecture
+## 8. Learned Rules
+
+When referencing any agent, subagent, section, skill, or tool by identifier, always include its full title and one-line function inline — never the identifier alone. Bare identifiers are ambiguous when read cold by any agent or human.
+
+**Version & model freshness:** Before recommending or pinning any library version, AI model, or free tier — use Exa to verify the current latest release. Never rely on training data for version numbers, model names, or pricing/availability. For Python packages, also run `pip index versions <pkg>` to confirm. Training data is stale by definition; a wrong version pin (e.g. `docling==2.0.0`) or wrong model name (e.g. `gemma3` when `gemma4` is current) wastes sessions and breaks installs.
+
+Example: "S06 (Accessibility & Compliance — defines inclusive UX requirements and geographic legal obligations)" not just "S06".
+
+## 9. ECC Plugin Dependency
+
+TDD enforcement uses `architect-tdd-workflow` (vendored — always available, no ECC needed). Several other sections invoke optional ECC skills (ecc:architecture-decision-records, ecc:frontend-patterns, ecc:backend-patterns, ecc:database-migrations, ecc:security-scan). These require the ECC plugin:
+```
+/plugin install ecc@ecc
+```
+
+If not installed, skip ECC skill invocations and proceed with manual execution per section guidance.
+
+## 10. Memory Architecture
 
 This pipeline uses three memory layers. All three must be active — presence in requirements is not integration.
 
@@ -80,6 +97,25 @@ This pipeline uses three memory layers. All three must be active — presence in
 - Every agent that reads section content should prefer `smart_search` over re-reading all files when looking for specific decisions or flags
 
 **Project namespacing is mandatory.** All observations, memory entries, and corpus IDs must be prefixed `[<project>]` or use `architect-<project>` as corpus ID. Never write to or query a generic (un-namespaced) corpus.
+
+## 11. Modular Development Convention
+
+**All implementation plans produced by this pipeline must be feature-modular — not build-phase linear.**
+
+A feature module is a vertical slice of the product: one feature, one branch, isolated file scope. This applies to every project regardless of size.
+
+**Required structure for every plan:**
+
+- Each module has a name, a git branch name (`feature/<slug>`), a declared file scope (list of directories/files it owns), an explicit dependency list (which other modules must be merged first), and a gate criterion (observable test or behavior that must pass before PR).
+- Modules with no shared dependencies can be worked in parallel — the plan must identify these explicitly.
+- Tests are written within the module branch, not deferred to a separate testing phase.
+- No module may modify files outside its declared scope. If a dependency is missing, log it as a blocker — do not reach into another module.
+
+**Why:** Phase-based plans create monolithic branches. A bug in one feature requires context-switching across the entire codebase. Module-based plans contain the blast radius — a broken module is debuggable in isolation, fixable without touching others.
+
+**Applies to:** Planner (plan structure), Executor (branch discipline), S09 (module structure), S13 (tests per module).
+
+---
 
 ## What This Pipeline Is Not
 
